@@ -1,0 +1,19 @@
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:iota="http://www.mulesoft.org/schema/mule/iota"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+          http://www.mulesoft.org/schema/mule/iota http://www.mulesoft.org/schema/mule/iota/current/mule-iota.xsd">
+
+    <iota:config name="config">
+        <iota:connection protocol="HTTP" host="localhost" port="14265"/>
+    </iota:config>
+
+    <flow name="sayHiFlow">
+        <iota:say-hi person="Mariano Gonzalez"/>
+    </flow>
+
+    <flow name="retrieveInfoFlow">
+        <iota:retrieve-info config-ref="config"/>
+    </flow>
+
+</mule>
