@@ -5,15 +5,14 @@
           http://www.mulesoft.org/schema/mule/iota http://www.mulesoft.org/schema/mule/iota/current/mule-iota.xsd">
 
     <iota:config name="config">
-        <iota:connection protocol="HTTP" host="localhost" port="14265"/>
+        <iota:connection protocol="HTTPS" host="nodes.devnet.iota.org" port="443"/>
     </iota:config>
 
-    <flow name="sayHiFlow">
-        <iota:say-hi person="Mariano Gonzalez"/>
-    </flow>
-
     <flow name="retrieveInfoFlow">
-        <iota:retrieve-info config-ref="config"/>
+        <iota:retrieve-node-info config-ref="config"/>
+    </flow>
+    <flow name="generateSeed">
+    	<iota:generate-seed/>
     </flow>
 
 </mule>

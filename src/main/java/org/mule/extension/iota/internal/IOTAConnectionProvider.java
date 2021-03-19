@@ -1,14 +1,15 @@
 package org.mule.extension.iota.internal;
 
 import org.mule.runtime.api.connection.ConnectionException;
+import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.ParameterGroup;
 import org.mule.runtime.extension.api.annotation.Expression;
-import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
 import org.mule.runtime.api.connection.PoolingConnectionProvider;
 import org.mule.runtime.api.meta.ExpressionSupport;
 import org.mule.runtime.api.connection.ConnectionProvider;
+import org.mule.extension.iota.api.IOTAFunctions;
 import org.mule.runtime.api.connection.CachedConnectionProvider;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Example;
@@ -35,51 +36,49 @@ public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConn
 
 	private final Logger LOGGER = LoggerFactory.getLogger(IOTAConnectionProvider.class);
 	private IotaAPI client;
-	
+
 	public static final class ConnectionProperties {
 		@Parameter
 		@DisplayName("Protocol")
-		@Example("HTTP")
+		@Optional(defaultValue = "HTTP")
 		@Expression(ExpressionSupport.SUPPORTED)
 		private Protocol protocol;
-		
+
 		@Parameter
 		@DisplayName("Host")
 		@Example("localhost")
 		@Expression(ExpressionSupport.SUPPORTED)
 		private String host;
-		
+
 		@Parameter
 		@DisplayName("Port")
 		@Example("14265")
 		@Expression(ExpressionSupport.SUPPORTED)
 		private Integer port;
-		
+
 		public HttpConstants.Protocol getProtocol() {
 			return protocol;
 		}
-		
+
 		public String getHost() {
 			return host;
 		}
-		
+
 		public Integer getPort() {
 			return port;
 		}
 	}
-	
+
 	@ParameterGroup(name = "Connection")
 	private ConnectionProperties properties;
 
 	private IotaAPI setupClient() throws ConnectionException {
-		client = new IotaAPI.Builder().protocol(properties.getProtocol().toString())
-				.host(properties.getHost())
-				.port(properties.getPort())
-				.build();
-		
+		client = new IotaAPI.Builder().protocol(properties.getProtocol().toString()).host(properties.getHost(), false)
+				.port(properties.getPort()).build();
+
 		return client;
 	}
-	
+
 	@Override
 	public IOTAConnection connect() throws ConnectionException {
 		return new IOTAConnection(setupClient(), properties.getProtocol(), properties.getHost(), properties.getPort());
@@ -96,6 +95,12 @@ public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConn
 
 	@Override
 	public ConnectionValidationResult validate(IOTAConnection connection) {
-		return ConnectionValidationResult.success();
+		try {
+			IOTAFunctions.getNodeInfoResponse(connection.getClient());
+			return ConnectionValidationResult.success();
+		} catch (Exception e) {
+			LOGGER.error("Error validating connection [" + e.getMessage(), e);
+			return ConnectionValidationResult.failure("Error validating connection", e);
+		}
 	}
 }
