@@ -1,4 +1,4 @@
-# IOTA Extension
+# IOTA Connector
 
 Add description ...
 
