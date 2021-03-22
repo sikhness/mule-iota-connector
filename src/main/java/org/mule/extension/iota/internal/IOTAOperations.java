@@ -39,6 +39,6 @@ public class IOTAOperations {
 	public String generateAddress(@Config IOTAConfiguration configuration, @Connection IOTAConnection connection,
 			@ParameterGroup(name = "Address Settings") AddressSettings addressSettings) {
 		return IOTAFunctions.generateAddress(connection.getClient(), addressSettings.getSeed(),
-				addressSettings.getSecurityLevel());
+				Integer.parseInt(addressSettings.getSecurityLevel()));
 	}
 }

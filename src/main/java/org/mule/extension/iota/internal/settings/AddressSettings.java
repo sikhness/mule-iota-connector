@@ -1,24 +1,12 @@
 package org.mule.extension.iota.internal.settings;
 
+import org.mule.extension.iota.api.types.SecurityLevel;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
+import org.mule.runtime.extension.api.annotation.values.OfValues;
 
 public class AddressSettings {
-	
-	private enum SecurityLevel {
-		ONE(1), TWO(2), THREE(3);
-		
-		private int value;
-		
-		private SecurityLevel(int value) {
-			this.value = value;
-		}
-		
-		public int getValue() {
-			return value;
-		}
-	}
 	
 	@Parameter
 	@DisplayName("Seed")
@@ -26,15 +14,16 @@ public class AddressSettings {
 
 	@Parameter
 	@DisplayName("Security level")
-	@Optional(defaultValue = "TWO")
-	private SecurityLevel securityLevel;
+	@Optional(defaultValue = "2")
+	@OfValues(SecurityLevel.class)
+	private String securityLevel;
 	
 	public String getSeed() {
 		return seed;
 	}
 	
-	public int getSecurityLevel() {
-		return securityLevel.getValue();
+	public String getSecurityLevel() {
+		return securityLevel;
 	}
 	
 }
