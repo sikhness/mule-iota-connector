@@ -7,7 +7,7 @@ import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.values.OfValues;
 
 public class AddressSettings {
-	
+
 	@Parameter
 	@DisplayName("Seed")
 	private String seed;
@@ -17,13 +17,13 @@ public class AddressSettings {
 	@Optional(defaultValue = "2")
 	@OfValues(SecurityLevel.class)
 	private String securityLevel;
-	
+
 	public String getSeed() {
 		return seed;
 	}
-	
-	public String getSecurityLevel() {
-		return securityLevel;
+
+	public int getSecurityLevel() {
+		return Integer.parseInt(securityLevel);
 	}
-	
+
 }
