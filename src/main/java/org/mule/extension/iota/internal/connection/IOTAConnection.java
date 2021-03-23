@@ -1,4 +1,4 @@
-package org.mule.extension.iota.internal;
+package org.mule.extension.iota.internal.connection;
 
 import org.mule.runtime.http.api.HttpConstants.Protocol;
 import org.iota.jota.IotaAPI;
