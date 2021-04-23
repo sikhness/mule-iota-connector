@@ -12,10 +12,13 @@ import org.mule.extension.iota.internal.settings.AddressSettings;
 import org.mule.extension.iota.internal.settings.RetrieveTransactionsAddressSettings;
 import org.mule.extension.iota.internal.settings.RetrieveTransactionsSeedSettings;
 import org.mule.extension.iota.internal.settings.RetrieveTransactionsSettings;
+import org.mule.extension.iota.internal.settings.TransferSettings;
+import org.mule.runtime.core.api.util.IOUtils;
 import org.mule.runtime.extension.api.annotation.param.Config;
 import org.mule.runtime.extension.api.annotation.param.Connection;
 import org.iota.jota.dto.response.GetNodeInfoResponse;
 import org.iota.jota.dto.response.GetTransferResponse;
+import org.iota.jota.dto.response.SendTransferResponse;
 
 /**
  * This class is a container for operations, every public method in this class
@@ -66,5 +69,15 @@ public class IOTAOperations {
 					seedSettings.getSecurityLevel(), seedSettings.getStartIndex(), seedSettings.getEndIndex());
 		} else
 			return null;
+	}
+
+	@MediaType(value = ANY, strict = false)
+	@DisplayName("Send transfer")
+	public SendTransferResponse sendTransfer(@Config IOTAConfiguration configuration, @Connection IOTAConnection connection,
+			@ParameterGroup(name = "Transfer Details") TransferSettings transfer) {
+		return IOTAFunctions.sendTransfer(connection.getClient(), transfer.getSeed(), transfer.getSecurityLevel(),
+				transfer.getDepth(), transfer.getMinimumWeightMagnitude(), transfer.getRemainderAddress(),
+				transfer.getValidateBalances(), transfer.getValidateSpentAddress(), IOUtils.toString(transfer.getMessage(), "UTF-8"),
+				transfer.getTag(), transfer.getTransferValue(), transfer.getDestinationAddress());
 	}
 }
