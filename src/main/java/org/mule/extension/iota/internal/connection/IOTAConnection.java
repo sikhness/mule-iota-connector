@@ -1,5 +1,6 @@
 package org.mule.extension.iota.internal.connection;
 
+import org.mule.runtime.api.tls.TlsContextFactory;
 import org.mule.runtime.http.api.HttpConstants.Protocol;
 import org.iota.jota.IotaAPI;
 
@@ -13,12 +14,14 @@ public final class IOTAConnection {
 	private final String host;
 	private final Integer port;
 	private final IotaAPI client;
+	private final TlsContextFactory tlsContext;
 
-	public IOTAConnection(IotaAPI client, Protocol protocol, String host, Integer port) {
+	public IOTAConnection(IotaAPI client, Protocol protocol, String host, Integer port, TlsContextFactory tlsContext) {
 		this.protocol = protocol;
 		this.host = host;
 		this.port = port;
 		this.client = client; 
+		this.tlsContext = tlsContext;
 	}
 	
 	public Protocol getProtocol() {
@@ -35,6 +38,10 @@ public final class IOTAConnection {
 	
 	public IotaAPI getClient() {
 		return client;
+	}
+	
+	public TlsContextFactory getTlsContext() {
+		return tlsContext;
 	}
 
 	public void invalidate() {

@@ -7,16 +7,28 @@ import org.mule.runtime.extension.api.annotation.param.ParameterGroup;
 import org.mule.runtime.extension.api.annotation.Expression;
 import org.mule.runtime.api.connection.ConnectionValidationResult;
 import org.mule.runtime.api.connection.PoolingConnectionProvider;
+import org.mule.runtime.api.lifecycle.Initialisable;
+import org.mule.runtime.api.lifecycle.InitialisationException;
 import org.mule.runtime.api.meta.ExpressionSupport;
+import org.mule.runtime.api.tls.TlsContextFactory;
 import org.mule.runtime.api.connection.ConnectionProvider;
 import org.mule.extension.iota.api.IOTAFunctions;
 import org.mule.runtime.api.connection.CachedConnectionProvider;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Example;
+import org.mule.runtime.extension.api.annotation.param.display.Placement;
 import org.mule.runtime.http.api.HttpConstants;
 import org.mule.runtime.http.api.HttpConstants.Protocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.mule.runtime.api.meta.ExpressionSupport.NOT_SUPPORTED;
+import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.initialiseIfNeeded;
+import static org.mule.runtime.extension.api.annotation.param.display.Placement.SECURITY_TAB;
+
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+
 import org.iota.jota.IotaAPI;
 
 /**
@@ -32,7 +44,7 @@ import org.iota.jota.IotaAPI;
  * creates and caches connections or simply {@link ConnectionProvider} if you
  * want a new connection each time something requires one.
  */
-public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConnection> {
+public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConnection>, Initialisable {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(IOTAConnectionProvider.class);
 	private IotaAPI client;
@@ -72,16 +84,50 @@ public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConn
 	@ParameterGroup(name = "Connection")
 	private ConnectionProperties properties;
 
-	private IotaAPI setupClient() throws ConnectionException {
-		client = new IotaAPI.Builder().protocol(properties.getProtocol().toString()).host(properties.getHost(), false)
-				.port(properties.getPort()).build();
+	/**
+	 * Reference to a TLS config element. This will enable HTTPS for this config.
+	 */
+	@Parameter
+	@Optional
+	@Expression(NOT_SUPPORTED)
+	@DisplayName("TLS Configuration")
+	@Placement(tab = SECURITY_TAB)
+	private TlsContextFactory tlsContext;
+
+	public TlsContextFactory getTlsContext() {
+		return tlsContext;
+	}
+
+	@Override
+	public void initialise() throws InitialisationException {
+		if (tlsContext != null) {
+			initialiseIfNeeded(tlsContext);
+		}
+
+		try {
+			setupClient();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private IotaAPI setupClient() throws ConnectionException, KeyManagementException, NoSuchAlgorithmException {
+		if (tlsContext != null) {
+			client = new IotaAPI.Builder().protocol(properties.getProtocol().toString())
+					.host(properties.getHost(), false).port(properties.getPort())
+					.sslSocketFactory(tlsContext.createSslContext().getSocketFactory()).build();
+		} else {
+			client = new IotaAPI.Builder().protocol(properties.getProtocol().toString())
+					.host(properties.getHost(), false).port(properties.getPort()).build();
+		}
 
 		return client;
 	}
 
 	@Override
 	public IOTAConnection connect() throws ConnectionException {
-		return new IOTAConnection(setupClient(), properties.getProtocol(), properties.getHost(), properties.getPort());
+		return new IOTAConnection(client, properties.getProtocol(), properties.getHost(), properties.getPort(),
+				tlsContext);
 	}
 
 	@Override
