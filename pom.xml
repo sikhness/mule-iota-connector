@@ -16,17 +16,77 @@
 		<version>1.1.8</version>
 	</parent>
 
+	<properties>
+		<md-doclet-group>com.github.iotaledger</md-doclet-group>
+		<md-doclet-artifactId>java-md-doclet</md-doclet-artifactId>
+		<md-doclet-version>2.2</md-doclet-version>
+		<bcprov-jdk15on.version>1.66</bcprov-jdk15on.version>
+		<zxing.version>3.4.0</zxing.version>
+		<jackson-databind.version>2.11.2</jackson-databind.version>
+		<javase.version>2.6.0</javase.version>
+		<mongodb-driver.version>3.12.7</mongodb-driver.version>
+		<bson.version>3.12.7</bson.version>
+		<retrofit.version>2.9.0</retrofit.version>
+		<junit-jupiter.version>5.7.0</junit-jupiter.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
-			<groupId>org.iota</groupId>
-			<artifactId>jota</artifactId>
-			<version>1.0.0-beta8</version>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>${bcprov-jdk15on.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${md-doclet-group}</groupId>
+			<artifactId>${md-doclet-artifactId}</artifactId>
+			<version>${md-doclet-version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.github.olivergondza</groupId>
 					<artifactId>maven-jdk-tools-wrapper</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>${zxing.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson-databind.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.kenglxn.qrgen</groupId>
+			<artifactId>javase</artifactId>
+			<version>${javase.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.beust</groupId>
+					<artifactId>jcommander</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongodb-driver</artifactId>
+			<version>${mongodb-driver.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>bson</artifactId>
+			<version>${bson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.retrofit2</groupId>
+			<artifactId>retrofit</artifactId>
+			<version>${retrofit.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.retrofit2</groupId>
+			<artifactId>converter-gson</artifactId>
+			<version>${retrofit.version}</version>
 		</dependency>
 	</dependencies>
 
