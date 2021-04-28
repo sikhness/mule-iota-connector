@@ -14,6 +14,8 @@ import org.mule.extension.iota.internal.settings.RetrieveTransactionsAddressSett
 import org.mule.extension.iota.internal.settings.RetrieveTransactionsSeedSettings;
 import org.mule.extension.iota.internal.settings.RetrieveTransactionsSettings;
 import org.mule.extension.iota.internal.settings.TransferSettings;
+import org.mule.extension.iota.internal.settings.ValueTransfer;
+import org.mule.extension.iota.internal.settings.ZeroValueTransfer;
 import org.mule.runtime.core.api.util.IOUtils;
 import org.mule.runtime.extension.api.annotation.param.Config;
 import org.mule.runtime.extension.api.annotation.param.Connection;
@@ -52,7 +54,7 @@ public class IOTAOperations {
 		return IOTAFunctions.generateAddress(connection.getClient(), addressSettings.getSeed(),
 				addressSettings.getSecurityLevel());
 	}
-	
+
 	@MediaType(value = ANY, strict = false)
 	@DisplayName("Get balance")
 	public long getBalance(@Config IOTAConfiguration configuration, @Connection IOTAConnection connection,
@@ -82,11 +84,22 @@ public class IOTAOperations {
 
 	@MediaType(value = ANY, strict = false)
 	@DisplayName("Send transfer")
-	public SendTransferResponse sendTransfer(@Config IOTAConfiguration configuration, @Connection IOTAConnection connection,
+	public SendTransferResponse sendTransfer(@Config IOTAConfiguration configuration,
+			@Connection IOTAConnection connection,
 			@ParameterGroup(name = "Transfer Details") TransferSettings transfer) {
-		return IOTAFunctions.sendTransfer(connection.getClient(), transfer.getSeed(), transfer.getSecurityLevel(),
-				transfer.getDepth(), transfer.getMinimumWeightMagnitude(), transfer.getRemainderAddress(),
-				transfer.getValidateBalances(), transfer.getValidateSpentAddress(), IOUtils.toString(transfer.getMessage(), "UTF-8"),
-				transfer.getTag(), transfer.getTransferValue(), transfer.getDestinationAddress());
+		if (transfer.getValueTransferMode() instanceof ZeroValueTransfer) {
+			return IOTAFunctions.sendTransfer(connection.getClient(), transfer.getSeed(), transfer.getSecurityLevel(),
+					transfer.getDepth(), transfer.getMinimumWeightMagnitude(), null, false, false,
+					IOUtils.toString(transfer.getMessage(), "UTF-8"), transfer.getTag(), 0,
+					transfer.getDestinationAddress());
+		} else {
+			ValueTransfer valueTransferDetails = (ValueTransfer) transfer.getValueTransferMode();
+
+			return IOTAFunctions.sendTransfer(connection.getClient(), transfer.getSeed(), transfer.getSecurityLevel(),
+					transfer.getDepth(), transfer.getMinimumWeightMagnitude(),
+					valueTransferDetails.getRemainderAddress(), valueTransferDetails.getValidateBalances(),
+					valueTransferDetails.getValidateSpentAddress(), IOUtils.toString(transfer.getMessage(), "UTF-8"),
+					transfer.getTag(), valueTransferDetails.getTransferValue(), transfer.getDestinationAddress());
+		}
 	}
 }

@@ -3,6 +3,9 @@ package org.mule.extension.iota.internal.settings;
 import java.io.InputStream;
 
 import org.mule.extension.iota.api.types.SecurityLevel;
+import org.mule.runtime.api.meta.ExpressionSupport;
+import org.mule.runtime.extension.api.annotation.Expression;
+import org.mule.runtime.extension.api.annotation.dsl.xml.ParameterDsl;
 import org.mule.runtime.extension.api.annotation.param.Content;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
@@ -23,19 +26,9 @@ public class TransferSettings {
 	private String destinationAddress;
 	
 	@Parameter
-	private int transferValue;
-	
-	@Parameter
-	@Optional(defaultValue = "True")
-	private boolean validateSpentAddress;
-	
-	@Parameter
-	@Optional(defaultValue = "True")
-	private boolean validateBalances;
-	
-	@Parameter
-	@Optional
-	private String remainderAddress;
+	@ParameterDsl(allowReferences = false)
+	@Expression(ExpressionSupport.NOT_SUPPORTED)
+	private ValueTransferMode valueTransferMode;
 	
 	@Parameter
 	@Optional
@@ -66,20 +59,8 @@ public class TransferSettings {
 		return destinationAddress;
 	}
 	
-	public int getTransferValue() {
-		return transferValue;
-	}
-	
-	public boolean getValidateSpentAddress() {
-		return validateSpentAddress;
-	}
-	
-	public boolean getValidateBalances() {
-		return validateBalances;
-	}
-	
-	public String getRemainderAddress() {
-		return remainderAddress;
+	public ValueTransferMode getValueTransferMode() {
+		return valueTransferMode;
 	}
 	
 	public InputStream getMessage() {
