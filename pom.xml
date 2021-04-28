@@ -28,6 +28,7 @@
 		<bson.version>3.12.7</bson.version>
 		<retrofit.version>2.9.0</retrofit.version>
 		<junit-jupiter.version>5.7.0</junit-jupiter.version>
+		<commons-lang3.version>3.11</commons-lang3.version>
 	</properties>
 
 	<dependencies>
@@ -87,6 +88,11 @@
 			<groupId>com.squareup.retrofit2</groupId>
 			<artifactId>converter-gson</artifactId>
 			<version>${retrofit.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
 		</dependency>
 	</dependencies>
 

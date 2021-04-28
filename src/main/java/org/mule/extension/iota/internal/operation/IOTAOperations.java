@@ -8,6 +8,7 @@ import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.extension.iota.api.IOTAFunctions;
 import org.mule.extension.iota.internal.config.IOTAConfiguration;
 import org.mule.extension.iota.internal.connection.IOTAConnection;
+import org.mule.extension.iota.internal.settings.AddressBalanceSettings;
 import org.mule.extension.iota.internal.settings.AddressSettings;
 import org.mule.extension.iota.internal.settings.RetrieveTransactionsAddressSettings;
 import org.mule.extension.iota.internal.settings.RetrieveTransactionsSeedSettings;
@@ -50,6 +51,14 @@ public class IOTAOperations {
 
 		return IOTAFunctions.generateAddress(connection.getClient(), addressSettings.getSeed(),
 				addressSettings.getSecurityLevel());
+	}
+	
+	@MediaType(value = ANY, strict = false)
+	@DisplayName("Get balance")
+	public long getBalance(@Config IOTAConfiguration configuration, @Connection IOTAConnection connection,
+			@ParameterGroup(name = "Balance Settings") AddressBalanceSettings addressBalanceSettings) {
+
+		return IOTAFunctions.getBalanceByAddress(connection.getClient(), addressBalanceSettings.getAddress());
 	}
 
 	@MediaType(value = ANY, strict = false)

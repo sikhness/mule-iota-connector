@@ -29,6 +29,10 @@ public final class IOTAFunctions {
 				.generateNewAddresses(new AddressRequest.Builder(seed, securityLevel).amount(1).checksum(true).build())
 				.getAddresses().get(0);
 	}
+	
+	public static long getBalanceByAddress(IotaAPI client, String address) {
+		return client.getBalance(address);
+	}
 
 	public static GetTransferResponse getTransfersByAddress(IotaAPI client, String[] addresses)
 			throws ArgumentException {
