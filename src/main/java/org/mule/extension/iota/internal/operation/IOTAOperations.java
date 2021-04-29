@@ -91,15 +91,17 @@ public class IOTAOperations {
 			return IOTAFunctions.sendTransfer(connection.getClient(), transfer.getSeed(), transfer.getSecurityLevel(),
 					transfer.getDepth(), transfer.getMinimumWeightMagnitude(), null, false, false,
 					IOUtils.toString(transfer.getMessage(), "UTF-8"), transfer.getTag(), 0,
-					transfer.getDestinationAddress());
+					transfer.getDestinationAddress(), null, true);
 		} else {
 			ValueTransfer valueTransferDetails = (ValueTransfer) transfer.getValueTransferMode();
 
 			return IOTAFunctions.sendTransfer(connection.getClient(), transfer.getSeed(), transfer.getSecurityLevel(),
 					transfer.getDepth(), transfer.getMinimumWeightMagnitude(),
-					valueTransferDetails.getRemainderAddress(), valueTransferDetails.getValidateBalances(),
-					valueTransferDetails.getValidateSpentAddress(), IOUtils.toString(transfer.getMessage(), "UTF-8"),
-					transfer.getTag(), valueTransferDetails.getTransferValue(), transfer.getDestinationAddress());
+					valueTransferDetails.getRemainderAddress(), valueTransferDetails.getValidateSourceBalance(),
+					valueTransferDetails.getValidateDestinationSpentAddress(),
+					IOUtils.toString(transfer.getMessage(), "UTF-8"), transfer.getTag(),
+					valueTransferDetails.getTransferValue(), transfer.getDestinationAddress(),
+					valueTransferDetails.getSourceAddress(), valueTransferDetails.getValidateSourceSpentAddress());
 		}
 	}
 }

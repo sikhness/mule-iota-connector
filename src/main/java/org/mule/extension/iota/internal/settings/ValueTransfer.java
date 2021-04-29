@@ -6,30 +6,45 @@ import org.mule.runtime.extension.api.annotation.param.Parameter;
 public class ValueTransfer implements ValueTransferMode {
 	
 	@Parameter
+	private String sourceAddress;
+	
+	@Parameter
 	private int transferValue;
 	
 	@Parameter
 	@Optional(defaultValue = "True")
-	private boolean validateSpentAddress;
+	private boolean validateSourceBalance;
 	
 	@Parameter
 	@Optional(defaultValue = "True")
-	private boolean validateBalances;
+	private boolean validateSourceSpentAddress;
+	
+	@Parameter
+	@Optional(defaultValue = "True")
+	private boolean validateDestinationSpentAddress;
 	
 	@Parameter
 	@Optional
 	private String remainderAddress;
 	
+	public String getSourceAddress() {
+		return sourceAddress;
+	}
+	
 	public int getTransferValue() {
 		return transferValue;
 	}
 	
-	public boolean getValidateSpentAddress() {
-		return validateSpentAddress;
+	public boolean getValidateSourceBalance() {
+		return validateSourceBalance;
 	}
 	
-	public boolean getValidateBalances() {
-		return validateBalances;
+	public boolean getValidateSourceSpentAddress() {
+		return validateSourceSpentAddress;
+	}
+	
+	public boolean getValidateDestinationSpentAddress() {
+		return validateDestinationSpentAddress;
 	}
 	
 	public String getRemainderAddress() {
