@@ -1,8 +1,5 @@
 package org.mule.extension.iota.api.types;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.iota.jota.utils.TrytesConverter;
@@ -12,17 +9,30 @@ public class Bundle {
 	public String bundleHash;
 	private int length;
 	private String message;
-	private List<Transaction> transactions;
+	private Transaction inputTransaction;
+	private Transaction outputTransaction;
+	private Transaction zeroValueTransaction;
+	private Transaction remainderTransaction;
 
 	public Bundle(org.iota.jota.model.Bundle bundle) {
 		bundleHash = bundle.getBundleHash();
 		length = bundle.getLength();
-		
-		transactions = new ArrayList<Transaction>();
-		for (org.iota.jota.model.Transaction transaction : bundle.getTransactions()) {
-			transactions.add(new Transaction(transaction));
+
+		// If the first transaction in the IOTA Bundle object is a zero value transfer,
+		// then set that into zeroValueTransaction and all others as null, otherwise it
+		// corresponds to the inputTransaction and the zeroValueTransfer is the 3rd
+		// transaction in the IOTA Bundle as per the behaviour of the Bundling logic in
+		// the IOTA client libraries
+		if (bundle.getTransactions().get(0).getValue() == 0) {
+			zeroValueTransaction = new Transaction(bundle.getTransactions().get(0));
+		} else {
+			inputTransaction = new Transaction(bundle.getTransactions().get(0));
+			outputTransaction = new Transaction(bundle.getTransactions().get(1));
+			zeroValueTransaction = new Transaction(bundle.getTransactions().get(2));
+			if (bundle.getTransactions().size() > 3)
+				remainderTransaction = new Transaction(bundle.getTransactions().get(3));
 		}
-		
+
 		message = retrieveBundleMessage();
 	}
 
@@ -37,8 +47,13 @@ public class Bundle {
 	 */
 	private String retrieveBundleMessage() {
 		// Retrieve the message (via SignatureFragments) of the first transaction in the
-		// bundle
-		String retrievedMessage = transactions.get(0).getSignatureFragments();
+		// bundle (either the inputTransaction if its a value transfer, or
+		// zeroValueTransaction if it's a zero value transfer)
+		String retrievedMessage;
+		if (inputTransaction == null)
+			retrievedMessage = zeroValueTransaction.getSignatureFragments();
+		else
+			retrievedMessage = inputTransaction.getSignatureFragments();
 
 		// If retrieved message is of odd length add a blank Tryte (9) to make it even
 		if (retrievedMessage.length() % 2 != 0) {
@@ -61,8 +76,20 @@ public class Bundle {
 		return message;
 	}
 
-	public List<Transaction> getTransactions() {
-		return transactions;
+	public Transaction getInputTransaction() {
+		return inputTransaction;
+	}
+
+	public Transaction getOutputTransaction() {
+		return outputTransaction;
+	}
+
+	public Transaction getZeroValueTransaction() {
+		return zeroValueTransaction;
+	}
+
+	public Transaction getRemainderTransaction() {
+		return remainderTransaction;
 	}
 
 	@Override
