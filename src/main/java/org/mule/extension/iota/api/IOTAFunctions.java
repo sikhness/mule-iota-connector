@@ -6,8 +6,6 @@ import java.util.List;
 import org.iota.jota.IotaAPI;
 import org.iota.jota.builder.AddressRequest;
 import org.iota.jota.dto.response.GetNodeInfoResponse;
-import org.iota.jota.dto.response.GetTransferResponse;
-import org.iota.jota.dto.response.SendTransferResponse;
 import org.iota.jota.error.ArgumentException;
 import org.iota.jota.model.Bundle;
 import org.iota.jota.model.Input;
@@ -17,6 +15,8 @@ import org.iota.jota.utils.InputValidator;
 import org.iota.jota.utils.SeedRandomGenerator;
 import org.iota.jota.utils.StopWatch;
 import org.iota.jota.utils.TrytesConverter;
+import org.mule.extension.iota.api.types.GetTransferResponse;
+import org.mule.extension.iota.api.types.SendTransferResponse;
 
 public final class IOTAFunctions {
 
@@ -50,13 +50,13 @@ public final class IOTAFunctions {
 		StopWatch stopWatch = new StopWatch();
 
 		Bundle[] bundles = client.bundlesFromAddresses(true, addresses);
-		return GetTransferResponse.create(bundles, stopWatch.getElapsedTimeMili());
+		return new GetTransferResponse(org.iota.jota.dto.response.GetTransferResponse.create(bundles, stopWatch.getElapsedTimeMili()));
 	}
 
 	public static GetTransferResponse getTransfersBySeed(IotaAPI client, String seed, int securityLevel, int startIndex,
 			int endIndex) throws ArgumentException {
 
-		return client.getTransfers(seed, securityLevel, startIndex, endIndex, true);
+		return new GetTransferResponse(client.getTransfers(seed, securityLevel, startIndex, endIndex, true));
 	}
 
 	public static int getIndexFromAddress(IotaAPI client, String seed, String address, int securityLevel) {
@@ -123,7 +123,7 @@ public final class IOTAFunctions {
 			sourceAddress = null;
 		}
 
-		return client.sendTransfer(seed, securityLevel, depth, minimumWeightMagnitude, transfers, sourceInputList,
-				remainderAddress, validateSourceBalance, validateDestinationSpentAddress, null);
+		return new SendTransferResponse(client.sendTransfer(seed, securityLevel, depth, minimumWeightMagnitude, transfers, sourceInputList,
+				remainderAddress, validateSourceBalance, validateDestinationSpentAddress, null));
 	}
 }

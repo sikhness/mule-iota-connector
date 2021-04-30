@@ -6,6 +6,8 @@ import org.mule.runtime.extension.api.annotation.param.MediaType;
 import org.mule.runtime.extension.api.annotation.param.ParameterGroup;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.extension.iota.api.IOTAFunctions;
+import org.mule.extension.iota.api.types.GetTransferResponse;
+import org.mule.extension.iota.api.types.SendTransferResponse;
 import org.mule.extension.iota.internal.config.IOTAConfiguration;
 import org.mule.extension.iota.internal.connection.IOTAConnection;
 import org.mule.extension.iota.internal.settings.AddressBalanceSettings;
@@ -20,8 +22,6 @@ import org.mule.runtime.core.api.util.IOUtils;
 import org.mule.runtime.extension.api.annotation.param.Config;
 import org.mule.runtime.extension.api.annotation.param.Connection;
 import org.iota.jota.dto.response.GetNodeInfoResponse;
-import org.iota.jota.dto.response.GetTransferResponse;
-import org.iota.jota.dto.response.SendTransferResponse;
 
 /**
  * This class is a container for operations, every public method in this class
