@@ -2,8 +2,8 @@ package org.mule.extension.iota;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import org.iota.jota.dto.response.GetNodeInfoResponse;
+
+import org.mule.extension.iota.api.types.RetrieveNodeInfo;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
 import org.junit.Test;
 
@@ -20,14 +20,8 @@ public class IOTAOperationsTestCase extends MuleArtifactFunctionalTestCase {
 
 	@Test
 	public void executeRetrieveInfoOperation() throws Exception {
-		GetNodeInfoResponse payloadValue = ((GetNodeInfoResponse) flowRunner("retrieveInfoFlow").run().getMessage()
+		RetrieveNodeInfo payloadValue = ((RetrieveNodeInfo) flowRunner("retrieveInfoFlow").run().getMessage()
 				.getPayload().getValue());
-		assertThat(payloadValue.getAppName(), is("HORNET"));
-	}
-
-	@Test
-	public void executeGenerateSeed() throws Exception {
-		String payloadValue = ((String) flowRunner("generateSeed").run().getMessage().getPayload().getValue());
-		assertThat(payloadValue, notNullValue());
+		assertThat(payloadValue.getNodeName(), is("HORNET"));
 	}
 }

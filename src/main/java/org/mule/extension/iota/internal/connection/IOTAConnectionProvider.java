@@ -10,26 +10,22 @@ import org.mule.runtime.api.connection.PoolingConnectionProvider;
 import org.mule.runtime.api.lifecycle.Initialisable;
 import org.mule.runtime.api.lifecycle.InitialisationException;
 import org.mule.runtime.api.meta.ExpressionSupport;
-import org.mule.runtime.api.tls.TlsContextFactory;
 import org.mule.runtime.api.connection.ConnectionProvider;
 import org.mule.extension.iota.api.IOTAFunctions;
+import org.mule.extension.iota.api.NativeUtils;
 import org.mule.runtime.api.connection.CachedConnectionProvider;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Example;
-import org.mule.runtime.extension.api.annotation.param.display.Placement;
 import org.mule.runtime.http.api.HttpConstants;
 import org.mule.runtime.http.api.HttpConstants.Protocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.mule.runtime.api.meta.ExpressionSupport.NOT_SUPPORTED;
-import static org.mule.runtime.core.api.lifecycle.LifecycleUtils.initialiseIfNeeded;
-import static org.mule.runtime.extension.api.annotation.param.display.Placement.SECURITY_TAB;
-
+import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
-import org.iota.jota.IotaAPI;
+import org.iota.client.Client;
 
 /**
  * This class (as it's name implies) provides connection instances and the
@@ -47,7 +43,7 @@ import org.iota.jota.IotaAPI;
 public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConnection>, Initialisable {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(IOTAConnectionProvider.class);
-	private IotaAPI client;
+	private Client iotaClient;
 
 	public static final class ConnectionProperties {
 		@Parameter
@@ -84,26 +80,63 @@ public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConn
 	@ParameterGroup(name = "Connection")
 	private ConnectionProperties properties;
 
-	/**
-	 * Reference to a TLS config element. This will enable HTTPS for this config.
+	/*
+	 * Load a singular instance of the required native library
 	 */
-	@Parameter
-	@Optional
-	@Expression(NOT_SUPPORTED)
-	@DisplayName("TLS Configuration")
-	@Placement(tab = SECURITY_TAB)
-	private TlsContextFactory tlsContext;
+	static {
+		loadNativeLibrary();
+	}
 
-	public TlsContextFactory getTlsContext() {
-		return tlsContext;
+	/*
+	 * Static function that loads a singular instance of the required embedded
+	 * native library based on the operating system
+	 */
+	private static void loadNativeLibrary() {
+		String osName = System.getProperty("os.name").toLowerCase();
+		String libraryPath;
+
+		if (osName.contains("windows")) {
+			// Try to load Windows library from resources folder (for testing), otherwise
+			// load from embedded Jar for runtime
+			try {
+				libraryPath = IOTAConnection.class.getClassLoader().getResource("iota_client.dll").getPath();
+				System.load(libraryPath);
+			} catch (UnsatisfiedLinkError e) {
+				try {
+					NativeUtils.loadLibraryFromJar("/iota_client.dll");
+				} catch (IOException error) {
+					throw new RuntimeException(error);
+				}
+			}
+		} else if (osName.contains("mac os x")) {
+			// Try to load MacOS library from resources folder (for testing), otherwise
+			try {
+				libraryPath = IOTAConnection.class.getClassLoader().getResource("libiota_client.dylib").getPath();
+				System.load(libraryPath);
+			} catch (UnsatisfiedLinkError e) {
+				try {
+					NativeUtils.loadLibraryFromJar("/libiota_client.dylib");
+				} catch (IOException error) {
+					throw new RuntimeException(error);
+				}
+			}
+		} else {
+			// Try to load Linux library from resources folder (for testing), otherwise
+			try {
+				libraryPath = IOTAConnection.class.getClassLoader().getResource("libiota_client.so").getPath();
+				System.load(libraryPath);
+			} catch (UnsatisfiedLinkError e) {
+				try {
+					NativeUtils.loadLibraryFromJar("/libiota_client.so");
+				} catch (IOException error) {
+					throw new RuntimeException(error);
+				}
+			}
+		}
 	}
 
 	@Override
 	public void initialise() throws InitialisationException {
-		if (tlsContext != null) {
-			initialiseIfNeeded(tlsContext);
-		}
-
 		try {
 			setupClient();
 		} catch (Exception e) {
@@ -111,23 +144,17 @@ public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConn
 		}
 	}
 
-	private IotaAPI setupClient() throws ConnectionException, KeyManagementException, NoSuchAlgorithmException {
-		if (tlsContext != null) {
-			client = new IotaAPI.Builder().protocol(properties.getProtocol().toString())
-					.host(properties.getHost(), false).port(properties.getPort())
-					.sslSocketFactory(tlsContext.createSslContext().getSocketFactory()).build();
-		} else {
-			client = new IotaAPI.Builder().protocol(properties.getProtocol().toString())
-					.host(properties.getHost(), false).port(properties.getPort()).build();
-		}
+	private Client setupClient() throws ConnectionException, KeyManagementException, NoSuchAlgorithmException {
+		String url = properties.protocol.toString().concat("://").concat(properties.host).concat(":")
+				.concat(properties.port.toString()).toLowerCase();
+		iotaClient = Client.Builder().withNode(url).finish();
 
-		return client;
+		return iotaClient;
 	}
 
 	@Override
 	public IOTAConnection connect() throws ConnectionException {
-		return new IOTAConnection(client, properties.getProtocol(), properties.getHost(), properties.getPort(),
-				tlsContext);
+		return new IOTAConnection(iotaClient, properties.getProtocol(), properties.getHost(), properties.getPort());
 	}
 
 	@Override
@@ -142,7 +169,7 @@ public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConn
 	@Override
 	public ConnectionValidationResult validate(IOTAConnection connection) {
 		try {
-			IOTAFunctions.getNodeInfoResponse(connection.getClient());
+			IOTAFunctions.getNodeInfo(connection.getIotaClient());
 			return ConnectionValidationResult.success();
 		} catch (Exception e) {
 			LOGGER.error("Error validating connection [" + e.getMessage(), e);

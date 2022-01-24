@@ -5,14 +5,11 @@
           http://www.mulesoft.org/schema/mule/iota http://www.mulesoft.org/schema/mule/iota/current/mule-iota.xsd">
 
     <iota:config name="config">
-        <iota:connection protocol="HTTPS" host="nodes.devnet.iota.org" port="443"/>
+        <iota:connection protocol="HTTPS" host="chrysalis-nodes.iota.cafe" port="443"/>
     </iota:config>
 
     <flow name="retrieveInfoFlow">
         <iota:retrieve-node-info config-ref="config"/>
-    </flow>
-    <flow name="generateSeed">
-    	<iota:generate-seed/>
     </flow>
 
 </mule>
