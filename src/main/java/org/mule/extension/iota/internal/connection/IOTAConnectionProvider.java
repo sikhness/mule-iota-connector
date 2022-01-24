@@ -97,7 +97,7 @@ public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConn
 
 		if (osName.contains("windows")) {
 			// Try to load Windows library from resources folder (for testing), otherwise
-			// load from embedded Jar for runtime
+			// load from embedded .dll for runtime
 			try {
 				libraryPath = IOTAConnection.class.getClassLoader().getResource("iota_client.dll").getPath();
 				System.load(libraryPath);
@@ -110,6 +110,7 @@ public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConn
 			}
 		} else if (osName.contains("mac os x")) {
 			// Try to load MacOS library from resources folder (for testing), otherwise
+			// load from embedded .dylib for runtime
 			try {
 				libraryPath = IOTAConnection.class.getClassLoader().getResource("libiota_client.dylib").getPath();
 				System.load(libraryPath);
@@ -122,6 +123,7 @@ public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConn
 			}
 		} else {
 			// Try to load Linux library from resources folder (for testing), otherwise
+			// load from embedded .so for runtime
 			try {
 				libraryPath = IOTAConnection.class.getClassLoader().getResource("libiota_client.so").getPath();
 				System.load(libraryPath);
