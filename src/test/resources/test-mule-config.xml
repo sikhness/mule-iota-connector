@@ -1,15 +1,26 @@
 <mule xmlns="http://www.mulesoft.org/schema/mule/core"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:iota="http://www.mulesoft.org/schema/mule/iota"
-      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:iota="http://www.mulesoft.org/schema/mule/iota"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
           http://www.mulesoft.org/schema/mule/iota http://www.mulesoft.org/schema/mule/iota/current/mule-iota.xsd">
 
-    <iota:config name="config">
-        <iota:connection protocol="HTTPS" host="chrysalis-nodes.iota.cafe" port="443"/>
-    </iota:config>
+	<iota:config name="config">
+		<iota:connection protocol="HTTPS"
+			host="chrysalis-nodes.iota.cafe" port="443" />
+	</iota:config>
 
-    <flow name="retrieveInfoFlow">
-        <iota:retrieve-node-info config-ref="config"/>
-    </flow>
+	<flow name="retrieveInfoFlow">
+		<iota:retrieve-node-info config-ref="config" />
+	</flow>
+
+	<flow name="generateSeedFlow">
+		<iota:generate-seed config-ref="config" />
+	</flow>
+
+	<flow name="generateAddressFlow">
+		<iota:generate-address config-ref="config"
+			publicSeed="something" accountIndex="0" addressRangeStart="0"
+			addressRangeEnd="1" humanReadableAddressPrefix="mule" />
+	</flow>
 
 </mule>
