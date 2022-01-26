@@ -27,7 +27,7 @@ public class GenerateAddressSettings {
 
 	@Parameter
 	@DisplayName("Human readable address prefix")
-	@Example("mule")
+	@Example("atoipt")
 	private String humanReadableAddressPrefix;
 
 	public String getPublicSeed() {
