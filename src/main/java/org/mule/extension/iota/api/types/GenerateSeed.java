@@ -4,25 +4,19 @@ import org.iota.client.Client;
 
 public class GenerateSeed {
 
-	private String privateSeed;
+	private String privateHexSeed;
 	private String privateMnemonicSeed;
-	private String publicSeed;
 	
 	public GenerateSeed () {
 		privateMnemonicSeed = Client.generateMnemonic();
-		privateSeed = Client.mnemonicToHexSeed(privateMnemonicSeed);
-		publicSeed = privateSeed.substring(64);
+		privateHexSeed = Client.mnemonicToHexSeed(privateMnemonicSeed);
 	}
 	
-	public String getPrivateSeed() {
-		return privateSeed;
+	public String getPrivateHexSeed() {
+		return privateHexSeed;
 	}
 	
 	public String getPrivateMnemonicSeed() {
 		return privateMnemonicSeed;
-	}
-	
-	public String getPublicSeed() {
-		return publicSeed;
 	}
 }

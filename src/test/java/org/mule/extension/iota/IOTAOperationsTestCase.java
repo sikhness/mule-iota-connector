@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.text.IsEmptyString;
-import org.mule.extension.iota.api.types.GenerateAddress;
+import org.mule.extension.iota.api.types.Address;
 import org.mule.extension.iota.api.types.GenerateSeed;
 import org.mule.extension.iota.api.types.RetrieveNodeInfo;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
@@ -41,7 +41,7 @@ public class IOTAOperationsTestCase extends MuleArtifactFunctionalTestCase {
 	@Test
 	public void executeGenerateAddressOperation() throws Exception {
 		@SuppressWarnings("unchecked")
-		List<GenerateAddress> payloadValue = ((List<GenerateAddress>) flowRunner("generateAddressFlow").run()
+		List<Address> payloadValue = ((List<Address>) flowRunner("generateAddressFlow").run()
 				.getMessage().getPayload().getValue());
 		assertThat(payloadValue.get(0).getAddress(), CoreMatchers.not(IsEmptyString.isEmptyOrNullString()));
 	}

@@ -18,9 +18,13 @@
 	</flow>
 
 	<flow name="generateAddressFlow">
-		<iota:generate-address config-ref="config"
-			publicSeed="1234" accountIndex="0" addressRangeStart="0"
-			addressRangeEnd="1" />
+		<iota:generate-address config-ref="config">
+			<iota:generate-mode>
+				<iota:generate-address-options
+					privateHexSeed="1234" accountIndex="0" addressRangeStart="0"
+					addressRangeEnd="1" />
+			</iota:generate-mode>
+		</iota:generate-address>
 	</flow>
 
 </mule>

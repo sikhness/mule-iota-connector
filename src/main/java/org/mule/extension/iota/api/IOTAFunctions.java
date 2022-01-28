@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.iota.client.Client;
 import org.iota.client.GetAddressesBuilder;
-import org.mule.extension.iota.api.types.GenerateAddress;
+import org.mule.extension.iota.api.types.Address;
 import org.mule.extension.iota.api.types.GenerateSeed;
 import org.mule.extension.iota.api.types.RetrieveNodeInfo;
 
@@ -19,24 +19,42 @@ public final class IOTAFunctions {
 		return new GenerateSeed();
 	}
 
-	public static List<GenerateAddress> generateAddress(Client iotaClient, String publicSeed, int accountIndex,
-			int addressRangeStart, int addressRangeEnd, String humanReadableAddressPrefix) {
+	public static List<Address> generateAddress(Client iotaClient, String privateHexSeed, long accountIndex,
+			long addressRangeStart, long addressRangeEnd, String humanReadableAddressPrefix) {
 
 		String[] addresses;
 
 		if (humanReadableAddressPrefix != null && !humanReadableAddressPrefix.trim().isEmpty())
-			addresses = new GetAddressesBuilder(publicSeed).withClient(iotaClient).withAccountIndex(accountIndex)
+			addresses = iotaClient.getAddresses(privateHexSeed).withAccountIndex(accountIndex)
 					.withRange(addressRangeStart, addressRangeEnd).withBech32Hrp(humanReadableAddressPrefix).finish();
 		else
-			addresses = new GetAddressesBuilder(publicSeed).withClient(iotaClient).withAccountIndex(accountIndex)
+			addresses = iotaClient.getAddresses(privateHexSeed).withAccountIndex(accountIndex)
 					.withRange(addressRangeStart, addressRangeEnd).finish();
 
-		List<GenerateAddress> returnAddressList = new ArrayList<GenerateAddress>();
+		List<Address> returnAddressList = new ArrayList<Address>();
 
+		long addressIndexCount = addressRangeStart;
 		for (String address : addresses) {
-			returnAddressList.add(new GenerateAddress(address));
+			long addressBalance = iotaClient.getAddressBalance(address).balance();
+			returnAddressList.add(new Address(address, accountIndex, addressIndexCount, addressBalance));
+			addressIndexCount++;
 		}
 
 		return returnAddressList;
+	}
+
+	public static Address generateNewAddress(Client iotaClient, String privateHexSeed, long accountIndex) {
+		int addressRangeIndex;
+		long addressBalance = -1;
+		String newAddress = new String();
+
+		// Go through the address space to find the first address where the balance is 0
+		for (addressRangeIndex = 1; addressBalance != 0; addressRangeIndex++) {
+			newAddress = iotaClient.getAddresses(privateHexSeed).withAccountIndex(accountIndex)
+					.withRange(addressRangeIndex - 1, addressRangeIndex).finish()[0];
+			addressBalance = iotaClient.getAddressBalance(newAddress).balance();
+		}
+
+		return new Address(newAddress, accountIndex, addressRangeIndex - 2, addressBalance);
 	}
 }
