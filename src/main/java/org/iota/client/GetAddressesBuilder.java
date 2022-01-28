@@ -45,7 +45,8 @@ public final class GetAddressesBuilder {
         long a0 = client.mNativeObj;
         long ret = do_withClient(mNativeObj, a0);
         GetAddressesBuilder convRet = new GetAddressesBuilder(InternalPointerMarker.RAW_PTR, ret);
-        java.lang.ref.Reference.reachabilityFence(client);
+
+        JNIReachabilityFence.reachabilityFence1(client);
 
         return convRet;
     }

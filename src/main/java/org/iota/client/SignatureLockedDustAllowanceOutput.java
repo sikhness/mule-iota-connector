@@ -29,7 +29,8 @@ public final class SignatureLockedDustAllowanceOutput {
 
         long ret = do_from(a0, amount);
         SignatureLockedDustAllowanceOutput convRet = new SignatureLockedDustAllowanceOutput(InternalPointerMarker.RAW_PTR, ret);
-        java.lang.ref.Reference.reachabilityFence(address);
+
+        JNIReachabilityFence.reachabilityFence1(address);
 
         return convRet;
     }

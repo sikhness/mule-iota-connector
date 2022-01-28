@@ -12,7 +12,8 @@ public final class Util {
         client.mNativeObj = 0;
 
         String ret = do_consolidateFunds(a0, seed, account_index, address_range_low, address_range_high);
-        java.lang.ref.Reference.reachabilityFence(client);
+
+        JNIReachabilityFence.reachabilityFence1(client);
 
         return ret;
     }
@@ -26,7 +27,8 @@ public final class Util {
 
         long ret = do_searchAddress(seed, bech32_hrp, account_index, range_low, range_high, a5);
         IndexPublicDto convRet = new IndexPublicDto(InternalPointerMarker.RAW_PTR, ret);
-        java.lang.ref.Reference.reachabilityFence(address);
+
+        JNIReachabilityFence.reachabilityFence1(address);
 
         return convRet;
     }

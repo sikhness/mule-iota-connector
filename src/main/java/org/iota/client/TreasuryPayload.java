@@ -16,8 +16,8 @@ public final class TreasuryPayload {
         long a1 = output.mNativeObj;
         output.mNativeObj = 0;
 
-        mNativeObj = init(a0, a1);        java.lang.ref.Reference.reachabilityFence(input);
-        java.lang.ref.Reference.reachabilityFence(output);
+        mNativeObj = init(a0, a1);
+        JNIReachabilityFence.reachabilityFence2(input, output);
     }
     private static native long init(long input, long output);
 

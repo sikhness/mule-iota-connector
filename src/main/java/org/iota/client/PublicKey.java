@@ -23,7 +23,8 @@ public final class PublicKey {
         sig.mNativeObj = 0;
 
         boolean ret = do_verify(mNativeObj, a0, msg);
-        java.lang.ref.Reference.reachabilityFence(sig);
+
+        JNIReachabilityFence.reachabilityFence1(sig);
 
         return ret;
     }

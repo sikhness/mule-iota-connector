@@ -32,7 +32,8 @@ public final class MilestoneUtxoChangesResponse {
     private final boolean rustEq(MilestoneUtxoChangesResponse o) {
         long a0 = o.mNativeObj;
         boolean ret = do_rustEq(mNativeObj, a0);
-        java.lang.ref.Reference.reachabilityFence(o);
+
+        JNIReachabilityFence.reachabilityFence1(o);
 
         return ret;
     }

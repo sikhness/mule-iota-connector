@@ -19,7 +19,8 @@ public final class ReceiptPayload {
 
         long ret = do_from(migrated_at, last, funds, a3);
         ReceiptPayload convRet = new ReceiptPayload(InternalPointerMarker.RAW_PTR, ret);
-        java.lang.ref.Reference.reachabilityFence(transaction);
+
+        JNIReachabilityFence.reachabilityFence1(transaction);
 
         return convRet;
     }

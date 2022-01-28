@@ -41,7 +41,8 @@ public final class MessageBuilder {
 
         long ret = do_payload(mNativeObj, a0);
         MessageBuilder convRet = new MessageBuilder(InternalPointerMarker.RAW_PTR, ret);
-        java.lang.ref.Reference.reachabilityFence(payload);
+
+        JNIReachabilityFence.reachabilityFence1(payload);
 
         return convRet;
     }

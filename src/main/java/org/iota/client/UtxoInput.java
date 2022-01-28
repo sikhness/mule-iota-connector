@@ -24,7 +24,8 @@ public final class UtxoInput {
 
         long ret = do_from(a0, index);
         UtxoInput convRet = new UtxoInput(InternalPointerMarker.RAW_PTR, ret);
-        java.lang.ref.Reference.reachabilityFence(id);
+
+        JNIReachabilityFence.reachabilityFence1(id);
 
         return convRet;
     }

@@ -35,7 +35,8 @@ public final class TreasuryResponse {
     private final boolean rustEq(TreasuryResponse o) {
         long a0 = o.mNativeObj;
         boolean ret = do_rustEq(mNativeObj, a0);
-        java.lang.ref.Reference.reachabilityFence(o);
+
+        JNIReachabilityFence.reachabilityFence1(o);
 
         return ret;
     }

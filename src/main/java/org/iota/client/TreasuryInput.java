@@ -13,7 +13,8 @@ public final class TreasuryInput {
         long a0 = milestone.mNativeObj;
         milestone.mNativeObj = 0;
 
-        mNativeObj = init(a0);        java.lang.ref.Reference.reachabilityFence(milestone);
+        mNativeObj = init(a0);
+        JNIReachabilityFence.reachabilityFence1(milestone);
     }
     private static native long init(long milestone);
 

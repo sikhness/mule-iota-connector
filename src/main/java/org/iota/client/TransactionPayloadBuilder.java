@@ -19,7 +19,8 @@ public final class TransactionPayloadBuilder {
 
         long ret = do_withEssence(mNativeObj, a0);
         TransactionPayloadBuilder convRet = new TransactionPayloadBuilder(InternalPointerMarker.RAW_PTR, ret);
-        java.lang.ref.Reference.reachabilityFence(essence);
+
+        JNIReachabilityFence.reachabilityFence1(essence);
 
         return convRet;
     }
@@ -33,7 +34,8 @@ public final class TransactionPayloadBuilder {
 
         long ret = do_withUnlockBlocks(mNativeObj, a0);
         TransactionPayloadBuilder convRet = new TransactionPayloadBuilder(InternalPointerMarker.RAW_PTR, ret);
-        java.lang.ref.Reference.reachabilityFence(unlock_blocks);
+
+        JNIReachabilityFence.reachabilityFence1(unlock_blocks);
 
         return convRet;
     }

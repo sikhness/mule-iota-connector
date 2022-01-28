@@ -21,8 +21,16 @@ public final class IOTAFunctions {
 
 	public static List<GenerateAddress> generateAddress(Client iotaClient, String publicSeed, int accountIndex,
 			int addressRangeStart, int addressRangeEnd, String humanReadableAddressPrefix) {
-		String[] addresses = new GetAddressesBuilder(publicSeed).withClient(iotaClient).withAccountIndex(accountIndex)
-				.withRange(addressRangeStart, addressRangeEnd).withBech32Hrp(humanReadableAddressPrefix).finish();
+
+		String[] addresses;
+
+		if (humanReadableAddressPrefix != null && !humanReadableAddressPrefix.trim().isEmpty())
+			addresses = new GetAddressesBuilder(publicSeed).withClient(iotaClient).withAccountIndex(accountIndex)
+					.withRange(addressRangeStart, addressRangeEnd).withBech32Hrp(humanReadableAddressPrefix).finish();
+		else
+			addresses = new GetAddressesBuilder(publicSeed).withClient(iotaClient).withAccountIndex(accountIndex)
+					.withRange(addressRangeStart, addressRangeEnd).finish();
+
 		List<GenerateAddress> returnAddressList = new ArrayList<GenerateAddress>();
 
 		for (String address : addresses) {

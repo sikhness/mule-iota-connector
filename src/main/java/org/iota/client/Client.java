@@ -173,7 +173,8 @@ public final class Client {
 
         long ret = do_getIncludedMessage(mNativeObj, a0);
         Message convRet = new Message(InternalPointerMarker.RAW_PTR, ret);
-        java.lang.ref.Reference.reachabilityFence(transaction_id);
+
+        JNIReachabilityFence.reachabilityFence1(transaction_id);
 
         return convRet;
     }
@@ -187,7 +188,8 @@ public final class Client {
 
         long ret = do_postMessage(mNativeObj, a0);
         MessageId convRet = new MessageId(InternalPointerMarker.RAW_PTR, ret);
-        java.lang.ref.Reference.reachabilityFence(msg);
+
+        JNIReachabilityFence.reachabilityFence1(msg);
 
         return convRet;
     }
@@ -202,7 +204,8 @@ public final class Client {
 
         long ret = do_reattach(mNativeObj, a0);
         MessageWrap convRet = new MessageWrap(InternalPointerMarker.RAW_PTR, ret);
-        java.lang.ref.Reference.reachabilityFence(message_id);
+
+        JNIReachabilityFence.reachabilityFence1(message_id);
 
         return convRet;
     }
@@ -216,7 +219,8 @@ public final class Client {
 
         long ret = do_reattachUnchecked(mNativeObj, a0);
         MessageWrap convRet = new MessageWrap(InternalPointerMarker.RAW_PTR, ret);
-        java.lang.ref.Reference.reachabilityFence(message_id);
+
+        JNIReachabilityFence.reachabilityFence1(message_id);
 
         return convRet;
     }
@@ -231,7 +235,8 @@ public final class Client {
 
         long ret = do_promote(mNativeObj, a0);
         MessageWrap convRet = new MessageWrap(InternalPointerMarker.RAW_PTR, ret);
-        java.lang.ref.Reference.reachabilityFence(message_id);
+
+        JNIReachabilityFence.reachabilityFence1(message_id);
 
         return convRet;
     }
@@ -245,7 +250,8 @@ public final class Client {
 
         long ret = do_promoteUnchecked(mNativeObj, a0);
         MessageWrap convRet = new MessageWrap(InternalPointerMarker.RAW_PTR, ret);
-        java.lang.ref.Reference.reachabilityFence(message_id);
+
+        JNIReachabilityFence.reachabilityFence1(message_id);
 
         return convRet;
     }
@@ -301,7 +307,8 @@ public final class Client {
         message_id.mNativeObj = 0;
 
         MessageWrap [] ret = do_retryUntilIncluded(mNativeObj, a0, interval, max_attempts);
-        java.lang.ref.Reference.reachabilityFence(message_id);
+
+        JNIReachabilityFence.reachabilityFence1(message_id);
 
         return ret;
     }

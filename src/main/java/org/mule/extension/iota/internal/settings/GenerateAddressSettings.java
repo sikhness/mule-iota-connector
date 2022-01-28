@@ -1,5 +1,6 @@
 package org.mule.extension.iota.internal.settings;
 
+import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Example;
@@ -27,7 +28,8 @@ public class GenerateAddressSettings {
 
 	@Parameter
 	@DisplayName("Human readable address prefix")
-	@Example("atoipt")
+	@Example("atoi")
+	@Optional
 	private String humanReadableAddressPrefix;
 
 	public String getPublicSeed() {

@@ -40,7 +40,8 @@ public final class Address {
         signature.mNativeObj = 0;
 
         do_verify(mNativeObj, msg, a1);
-        java.lang.ref.Reference.reachabilityFence(signature);
+
+        JNIReachabilityFence.reachabilityFence1(signature);
     }
     private static native void do_verify(long self, byte [] msg, long signature);
 
