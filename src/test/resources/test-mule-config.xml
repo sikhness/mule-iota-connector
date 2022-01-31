@@ -22,9 +22,16 @@
 			<iota:generate-mode>
 				<iota:generate-address-options
 					privateHexSeed="1234" accountIndex="0" addressRangeStart="0"
-					addressRangeEnd="1" />
+					numberOfAddresses="1" />
 			</iota:generate-mode>
 		</iota:generate-address>
+	</flow>
+
+	<flow name="findAddressFlow">
+		<iota:find-address config-ref="config"
+			privateHexSeed="1234"
+			address="iota1qz9nct2wfmcf7lzdmhmpcp8al2zpm7dk0mnj933glxp5vyu7gmgtws6dzmt"
+			accountIndex="0" findGapLimit="30" />
 	</flow>
 
 </mule>

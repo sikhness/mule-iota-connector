@@ -14,6 +14,7 @@ import org.mule.extension.iota.api.types.GenerateSeed;
 import org.mule.extension.iota.api.types.RetrieveNodeInfo;
 import org.mule.extension.iota.internal.config.IOTAConfiguration;
 import org.mule.extension.iota.internal.connection.IOTAConnection;
+import org.mule.extension.iota.internal.settings.FindAddress;
 import org.mule.extension.iota.internal.settings.GenerateAddressNewSettings;
 import org.mule.extension.iota.internal.settings.GenerateAddressOptionsSettings;
 import org.mule.extension.iota.internal.settings.GenerateAddressSettings;
@@ -49,8 +50,7 @@ public class IOTAOperations {
 	@MediaType(value = ANY, strict = false)
 	@DisplayName("Generate address")
 	@Alias("generate-address")
-	public List<Address> generateAddress(@Config IOTAConfiguration configuration,
-			@Connection IOTAConnection connection,
+	public List<Address> generateAddress(@Config IOTAConfiguration configuration, @Connection IOTAConnection connection,
 			@ParameterGroup(name = "Address Settings") GenerateAddressSettings addressMode) {
 
 		if (addressMode.getGenerateMode() instanceof GenerateAddressNewSettings) {
@@ -70,8 +70,17 @@ public class IOTAOperations {
 					generateAddressOptionsSettings.getPrivateHexSeed(),
 					generateAddressOptionsSettings.getAccountIndex(),
 					generateAddressOptionsSettings.getAddressRangeStart(),
-					generateAddressOptionsSettings.getAddressRangeEnd(),
+					generateAddressOptionsSettings.getNumberOfAddresses(),
 					generateAddressOptionsSettings.getHumanReadableAddressPrefix());
 		}
+	}
+
+	@MediaType(value = ANY, strict = false)
+	@DisplayName("Find address details")
+	@Alias("find-address")
+	public Address findAddress(@Config IOTAConfiguration configuration, @Connection IOTAConnection connection,
+			@ParameterGroup(name = "Address Settings") FindAddress findAddress) {
+		return IOTAFunctions.findAddress(connection.getIotaClient(), findAddress.getPrivateHexSeed(),
+				findAddress.getAddress(), findAddress.getAccountIndex(), findAddress.getFindGapLimit());
 	}
 }

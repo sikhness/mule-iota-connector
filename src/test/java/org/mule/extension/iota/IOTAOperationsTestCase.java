@@ -45,4 +45,11 @@ public class IOTAOperationsTestCase extends MuleArtifactFunctionalTestCase {
 				.getMessage().getPayload().getValue());
 		assertThat(payloadValue.get(0).getAddress(), CoreMatchers.not(IsEmptyString.isEmptyOrNullString()));
 	}
+	
+	@Test
+	public void executeFindAddressOperation() throws Exception {
+		Address payloadValue = ((Address) flowRunner("findAddressFlow").run()
+				.getMessage().getPayload().getValue());
+		assertThat(payloadValue.getAddressIndex(), is((long) 25));
+	}
 }

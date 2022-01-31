@@ -25,9 +25,9 @@ public class GenerateAddressOptionsSettings implements GenerateAddressMode {
 	private long addressRangeStart;
 
 	@Parameter
-	@DisplayName("Address range end")
+	@DisplayName("Number of addresses to generate")
 	@Example("1")
-	private long addressRangeEnd;
+	private long numberOfAddresses;
 
 	@Parameter
 	@DisplayName("Human readable address prefix")
@@ -47,8 +47,8 @@ public class GenerateAddressOptionsSettings implements GenerateAddressMode {
 		return addressRangeStart;
 	}
 
-	public long getAddressRangeEnd() {
-		return addressRangeEnd;
+	public long getNumberOfAddresses() {
+		return numberOfAddresses;
 	}
 
 	public String getHumanReadableAddressPrefix() {

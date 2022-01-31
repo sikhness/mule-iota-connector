@@ -147,8 +147,8 @@ public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConn
 	}
 
 	private Client setupClient() throws ConnectionException, KeyManagementException, NoSuchAlgorithmException {
-		String url = properties.protocol.toString().concat("://").concat(properties.host).concat(":")
-				.concat(properties.port.toString()).toLowerCase();
+		String url = (properties.protocol.toString() + "://" + properties.host + ":" + properties.port.toString())
+				.toLowerCase();
 		iotaClient = Client.Builder().withNode(url).finish();
 
 		return iotaClient;
