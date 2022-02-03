@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import org.iota.client.Client;
 import org.mule.extension.iota.api.types.Address;
 import org.mule.extension.iota.api.types.GenerateSeed;
+import org.mule.extension.iota.api.types.Message;
 import org.mule.extension.iota.api.types.RetrieveNodeInfo;
 
 public final class IOTAFunctions {
@@ -75,5 +76,33 @@ public final class IOTAFunctions {
 
 		throw new NoSuchElementException(
 				"Address " + address + " not found in the seed within the gap limit of " + findGapLimit);
+	}
+
+	public static boolean isHex(String hexValue) {
+		return (hexValue.matches("^[0-9a-fA-F]+$") && hexValue.length() == 64);
+	}
+
+	public static Message findMessage(Client iotaClient, String messageId) {
+
+		// Check to see if valid hexadecimal id provided
+		if (isHex(messageId)) {
+			org.iota.client.Message message = iotaClient.getMessage()
+					.data(org.iota.client.MessageId.fromString(messageId));
+			org.iota.client.MessageMetadata messageMetadata = iotaClient.getMessage()
+					.metadata(org.iota.client.MessageId.fromString(messageId));
+			org.iota.client.MilestoneResponse milestoneMessage;
+
+			// Find referenced milestone message if it exists
+			if (messageMetadata.referencedByMilestoneIndex() > 0) {
+				milestoneMessage = iotaClient.getMilestone(messageMetadata.referencedByMilestoneIndex());
+
+				return new Message(message, messageMetadata, milestoneMessage,
+						IOTAFunctions.getNodeInfo(iotaClient).getBech32Hrp());
+			}
+
+			return new Message(message, messageMetadata, null, IOTAFunctions.getNodeInfo(iotaClient).getBech32Hrp());
+		} else
+			throw new IllegalArgumentException(
+					"Invalid messageId specified. Ensure it is 64 characters in length with proper hexadecimal format.");
 	}
 }

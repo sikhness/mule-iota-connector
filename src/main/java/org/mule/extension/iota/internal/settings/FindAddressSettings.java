@@ -6,7 +6,7 @@ import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Example;
 
 @Alias(value = "find-address")
-public class FindAddress {
+public class FindAddressSettings {
 
 	@Parameter
 	@DisplayName("Private hex seed")

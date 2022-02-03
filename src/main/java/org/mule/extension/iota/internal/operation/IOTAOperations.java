@@ -11,10 +11,12 @@ import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.extension.iota.api.IOTAFunctions;
 import org.mule.extension.iota.api.types.Address;
 import org.mule.extension.iota.api.types.GenerateSeed;
+import org.mule.extension.iota.api.types.Message;
 import org.mule.extension.iota.api.types.RetrieveNodeInfo;
 import org.mule.extension.iota.internal.config.IOTAConfiguration;
 import org.mule.extension.iota.internal.connection.IOTAConnection;
-import org.mule.extension.iota.internal.settings.FindAddress;
+import org.mule.extension.iota.internal.settings.FindAddressSettings;
+import org.mule.extension.iota.internal.settings.FindMessageSettings;
 import org.mule.extension.iota.internal.settings.GenerateAddressNewSettings;
 import org.mule.extension.iota.internal.settings.GenerateAddressOptionsSettings;
 import org.mule.extension.iota.internal.settings.GenerateAddressSettings;
@@ -79,8 +81,16 @@ public class IOTAOperations {
 	@DisplayName("Find address details")
 	@Alias("find-address")
 	public Address findAddress(@Config IOTAConfiguration configuration, @Connection IOTAConnection connection,
-			@ParameterGroup(name = "Address Settings") FindAddress findAddress) {
+			@ParameterGroup(name = "Address Settings") FindAddressSettings findAddress) {
 		return IOTAFunctions.findAddress(connection.getIotaClient(), findAddress.getPrivateHexSeed(),
 				findAddress.getAddress(), findAddress.getAccountIndex(), findAddress.getFindGapLimit());
+	}
+
+	@MediaType(value = ANY, strict = false)
+	@DisplayName("Find message details")
+	@Alias("find-message")
+	public Message findMessage(@Config IOTAConfiguration configuration, @Connection IOTAConnection connection,
+			@ParameterGroup(name = "Message Settings") FindMessageSettings findMessage) {
+		return IOTAFunctions.findMessage(connection.getIotaClient(), findMessage.getMessageId());
 	}
 }
