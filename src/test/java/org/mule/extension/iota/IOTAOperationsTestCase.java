@@ -9,6 +9,7 @@ import org.hamcrest.CoreMatchers;
 import org.hamcrest.text.IsEmptyString;
 import org.mule.extension.iota.api.types.Address;
 import org.mule.extension.iota.api.types.GenerateSeed;
+import org.mule.extension.iota.api.types.Message;
 import org.mule.extension.iota.api.types.RetrieveNodeInfo;
 import org.mule.functional.junit4.MuleArtifactFunctionalTestCase;
 import org.junit.Test;
@@ -51,5 +52,13 @@ public class IOTAOperationsTestCase extends MuleArtifactFunctionalTestCase {
 		Address payloadValue = ((Address) flowRunner("findAddressFlow").run()
 				.getMessage().getPayload().getValue());
 		assertThat(payloadValue.getAddressIndex(), is((long) 25));
+	}
+	
+	@Test
+	public void executeFindMessageOperation() throws Exception {
+		@SuppressWarnings("unchecked")
+		List<Message> payloadValue = ((List<Message>) flowRunner("findMessageFlow").run()
+				.getMessage().getPayload().getValue());
+		assertThat(payloadValue.get(0).getIndexationPayload().getIndex(), is("HORNET Spammer"));
 	}
 }

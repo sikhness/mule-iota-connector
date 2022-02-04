@@ -34,4 +34,13 @@
 			accountIndex="0" findGapLimit="30" />
 	</flow>
 
+	<flow name="findMessageFlow">
+		<iota:find-message config-ref="config">
+			<iota:find-mode>
+				<iota:find-message-by-index
+					index="HORNET Spammer" maxResults="1" />
+			</iota:find-mode>
+		</iota:find-message>
+	</flow>
+
 </mule>

@@ -23,14 +23,14 @@ public final class OutputsOptions {
     /**
      * Whether the query should include spent outputs or not.
      */
-    private final void includeSpent(boolean include_spent) {
+    public final void includeSpent(boolean include_spent) {
         do_includeSpent(mNativeObj, include_spent);
     }
     private static native void do_includeSpent(long self, boolean include_spent);
     /**
      * The output type filter.
      */
-    private final void outputType(OutputKind output_type) {
+    public final void outputType(OutputKind output_type) {
         int a0 = (output_type != null) ? output_type.getValue() : -1;
 
         do_outputType(mNativeObj, a0);

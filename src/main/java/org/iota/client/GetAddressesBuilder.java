@@ -4,10 +4,17 @@ package org.iota.client;
 
 public final class GetAddressesBuilder {
 
-    public GetAddressesBuilder(String seed) {
-        mNativeObj = init(seed);
+    private GetAddressesBuilder() {}
+    /**
+     * Construct a new addressbuilder with a seed. Invalid seeds throw an error
+     */
+    public static GetAddressesBuilder from(String seed) {
+        long ret = do_from(seed);
+        GetAddressesBuilder convRet = new GetAddressesBuilder(InternalPointerMarker.RAW_PTR, ret);
+
+        return convRet;
     }
-    private static native long init(String seed);
+    private static native long do_from(String seed);
     /**
      * Set the account index
      */
