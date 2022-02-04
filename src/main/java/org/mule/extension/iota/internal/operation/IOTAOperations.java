@@ -16,6 +16,8 @@ import org.mule.extension.iota.api.types.RetrieveNodeInfo;
 import org.mule.extension.iota.internal.config.IOTAConfiguration;
 import org.mule.extension.iota.internal.connection.IOTAConnection;
 import org.mule.extension.iota.internal.settings.FindAddressSettings;
+import org.mule.extension.iota.internal.settings.FindMessageByIdSettings;
+import org.mule.extension.iota.internal.settings.FindMessageByIndex;
 import org.mule.extension.iota.internal.settings.FindMessageSettings;
 import org.mule.extension.iota.internal.settings.GenerateAddressNewSettings;
 import org.mule.extension.iota.internal.settings.GenerateAddressOptionsSettings;
@@ -89,8 +91,22 @@ public class IOTAOperations {
 	@MediaType(value = ANY, strict = false)
 	@DisplayName("Find message details")
 	@Alias("find-message")
-	public Message findMessage(@Config IOTAConfiguration configuration, @Connection IOTAConnection connection,
-			@ParameterGroup(name = "Message Settings") FindMessageSettings findMessage) {
-		return IOTAFunctions.findMessage(connection.getIotaClient(), findMessage.getMessageId());
+	public List<Message> findMessage(@Config IOTAConfiguration configuration, @Connection IOTAConnection connection,
+			@ParameterGroup(name = "Message Settings") FindMessageSettings findMode) {
+
+		if (findMode.getFindMode() instanceof FindMessageByIdSettings) {
+			List<Message> returnList = new ArrayList<Message>();
+			FindMessageByIdSettings findMessageByIdSettings = (FindMessageByIdSettings) findMode.getFindMode();
+
+			returnList
+					.add(IOTAFunctions.findMessage(connection.getIotaClient(), findMessageByIdSettings.getMessageId()));
+			return returnList;
+		} else if (findMode.getFindMode() instanceof FindMessageByIndex) {
+			FindMessageByIndex findMessageByIndex = (FindMessageByIndex) findMode.getFindMode();
+
+			return IOTAFunctions.findMessageByIndex(connection.getIotaClient(), findMessageByIndex.getIndex(),
+					findMessageByIndex.getMaxResults());
+		} else
+			return null;
 	}
 }

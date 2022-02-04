@@ -82,6 +82,17 @@ public final class IOTAFunctions {
 		return (hexValue.matches("^[0-9a-fA-F]+$") && hexValue.length() == 64);
 	}
 
+	public static List<Message> findMessageByIndex(Client iotaClient, String index, int maxResults) {
+		List<Message> messages = new ArrayList<Message>();
+		org.iota.client.MessageId[] messageIds = iotaClient.getMessage().indexString(index);
+
+		if (messageIds.length > 0)
+			for (int count = 0; count < maxResults; count++)
+				messages.add(IOTAFunctions.findMessage(iotaClient, messageIds[count].toString()));
+
+		return messages;
+	}
+
 	public static Message findMessage(Client iotaClient, String messageId) {
 
 		// Check to see if valid hexadecimal id provided
