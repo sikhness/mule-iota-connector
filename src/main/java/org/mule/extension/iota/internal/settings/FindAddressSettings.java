@@ -22,9 +22,14 @@ public class FindAddressSettings {
 	private long accountIndex;
 	
 	@Parameter
-	@DisplayName("Find gap limit")
+	@DisplayName("Address range start")
+	@Example("0")
+	private long addressRangeStart;
+	
+	@Parameter
+	@DisplayName("Address range end")
 	@Example("10")
-	private long findGapLimit;
+	private long addressRangeEnd;
 
 	public String getPrivateHexSeed() {
 		return privateHexSeed;
@@ -38,8 +43,12 @@ public class FindAddressSettings {
 		return accountIndex;
 	}
 	
-	public long getFindGapLimit() {
-		return findGapLimit;
+	public long getAddressRangeStart() {
+		return addressRangeStart;
+	}
+	
+	public long getAddressRangeEnd() {
+		return addressRangeEnd;
 	}
 
 }

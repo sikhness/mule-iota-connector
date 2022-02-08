@@ -6,12 +6,14 @@ public class Address {
 	private long accountIndex;
 	private long addressIndex;
 	private long balance;
+	private boolean dustAllowed;
 
-	public Address(String address, long accountIndex, long addressIndex, long balance) {
+	public Address(String address, long accountIndex, long addressIndex, long balance, boolean dustAllowed) {
 		this.address = address;
 		this.accountIndex = accountIndex;
 		this.addressIndex = addressIndex;
 		this.balance = balance;
+		this.dustAllowed = dustAllowed;
 	}
 
 	public String getAddress() {
@@ -28,6 +30,10 @@ public class Address {
 
 	public long getBalance() {
 		return balance;
+	}
+
+	public boolean getDustAllowed() {
+		return dustAllowed;
 	}
 
 }

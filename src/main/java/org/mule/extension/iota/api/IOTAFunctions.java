@@ -36,8 +36,9 @@ public final class IOTAFunctions {
 
 		long addressIndexCount = addressRangeStart;
 		for (String address : addresses) {
-			long addressBalance = iotaClient.getAddressBalance(address).balance();
-			returnAddressList.add(new Address(address, accountIndex, addressIndexCount, addressBalance));
+			org.iota.client.BalanceAddressResponse addressBalanceResponse = iotaClient.getAddressBalance(address);
+			returnAddressList.add(new Address(address, accountIndex, addressIndexCount,
+					addressBalanceResponse.balance(), addressBalanceResponse.dustAllowed()));
 			addressIndexCount++;
 		}
 
@@ -47,35 +48,31 @@ public final class IOTAFunctions {
 	public static Address generateNewAddress(Client iotaClient, String privateHexSeed, long accountIndex) {
 		int addressRangeIndex;
 		long addressBalance = -1;
+		boolean addressDustAllowed = false;
 		String newAddress = new String();
 
 		// Go through the address space to find the first address where the balance is 0
 		for (addressRangeIndex = 0; addressBalance != 0; addressRangeIndex++) {
 			newAddress = iotaClient.getAddresses(privateHexSeed).withAccountIndex(accountIndex)
 					.withRange(0 + addressRangeIndex, 1 + addressRangeIndex).finish()[0];
-			addressBalance = iotaClient.getAddressBalance(newAddress).balance();
+			org.iota.client.BalanceAddressResponse addressBalanceResponse = iotaClient.getAddressBalance(newAddress);
+			addressBalance = addressBalanceResponse.balance();
+			addressDustAllowed = addressBalanceResponse.dustAllowed();
 		}
 
-		return new Address(newAddress, accountIndex, addressRangeIndex - 1, addressBalance);
+		return new Address(newAddress, accountIndex, addressRangeIndex - 1, addressBalance, addressDustAllowed);
 	}
 
 	public static Address findAddress(Client iotaClient, String privateHexSeed, String address, long accountIndex,
-			long findGapLimit) {
+			long addressRangeStart, long addressRangeEnd) {
 
-		// Go through seed at given accountIndex to find address. Stop when found or
-		// searchGapLimit has been reached
-		for (long currentGap = 0; currentGap <= findGapLimit; currentGap++) {
-			String currentAddress = iotaClient.getAddresses(privateHexSeed).withAccountIndex(accountIndex)
-					.withRange(0 + currentGap, 1 + currentGap).finish()[0];
+		long addressIndex = org.iota.client.Util.searchAddress(privateHexSeed, getNodeInfo(iotaClient).getBech32Hrp(),
+				accountIndex, addressRangeStart, addressRangeEnd, org.iota.client.Address.try_from_bech32(address))
+				.index();
+		org.iota.client.BalanceAddressResponse addressBalanceResponse = iotaClient.getAddressBalance(address);
 
-			if (currentAddress.equals(address)) {
-				long balance = iotaClient.getAddressBalance(currentAddress).balance();
-				return new Address(currentAddress, accountIndex, currentGap, balance);
-			}
-		}
-
-		throw new NoSuchElementException(
-				"Address " + address + " not found in the seed within the gap limit of " + findGapLimit);
+		return new Address(address, accountIndex, addressIndex, addressBalanceResponse.balance(),
+				addressBalanceResponse.dustAllowed());
 	}
 
 	public static boolean isHex(String hexValue) {

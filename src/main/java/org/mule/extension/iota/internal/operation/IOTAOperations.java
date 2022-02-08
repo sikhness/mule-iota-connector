@@ -85,7 +85,8 @@ public class IOTAOperations {
 	public Address findAddress(@Config IOTAConfiguration configuration, @Connection IOTAConnection connection,
 			@ParameterGroup(name = "Address Settings") FindAddressSettings findAddress) {
 		return IOTAFunctions.findAddress(connection.getIotaClient(), findAddress.getPrivateHexSeed(),
-				findAddress.getAddress(), findAddress.getAccountIndex(), findAddress.getFindGapLimit());
+				findAddress.getAddress(), findAddress.getAccountIndex(), findAddress.getAddressRangeStart(),
+				findAddress.getAddressRangeEnd());
 	}
 
 	@MediaType(value = ANY, strict = false)
