@@ -156,13 +156,15 @@ public class Message {
 		public class Output {
 			private String address;
 			private long amount;
+			private String type;
 
 			public Output(org.iota.client.Output output, String humanReadableAddressPrefix) {
+				type = output.kind().toString();
 				// Check to see if SIGNATURE_LOCKED_SINGLE or SIGNATURE_LOCKED_DUST_ALLOWANCE
-				if (output.kind().toString().equals("SIGNATURE_LOCKED_SINGLE")) {
+				if (type.equals("SIGNATURE_LOCKED_SINGLE")) {
 					address = output.asSignatureLockedSingleOutput().address().to_bech32(humanReadableAddressPrefix);
 					amount = output.asSignatureLockedSingleOutput().amount();
-				} else if (output.kind().toString().equals("SIGNATURE_LOCKED_DUST_ALLOWANCE")) {
+				} else if (type.equals("SIGNATURE_LOCKED_DUST_ALLOWANCE")) {
 					address = output.asSignatureLockedDustAllowanceOutput().address()
 							.to_bech32(humanReadableAddressPrefix);
 					amount = output.asSignatureLockedDustAllowanceOutput().amount();
@@ -175,6 +177,10 @@ public class Message {
 
 			public long getAmount() {
 				return amount;
+			}
+
+			public String getType() {
+				return type;
 			}
 		}
 	}
