@@ -5,7 +5,7 @@ import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Example;
 
-@Alias(value = "generate-address-new")
+@Alias(value = "generate-new-address")
 @DisplayName("Generate new address")
 public class GenerateAddressNewSettings implements GenerateAddressMode {
 

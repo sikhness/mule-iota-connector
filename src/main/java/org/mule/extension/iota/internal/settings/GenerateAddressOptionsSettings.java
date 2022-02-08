@@ -6,7 +6,7 @@ import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Example;
 
-@Alias(value = "generate-address-options")
+@Alias(value = "generate-address-with-options")
 @DisplayName("Generate addresses with options")
 public class GenerateAddressOptionsSettings implements GenerateAddressMode {
 

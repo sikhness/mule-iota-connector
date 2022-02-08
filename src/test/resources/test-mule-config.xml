@@ -20,7 +20,7 @@
 	<flow name="generateAddressFlow">
 		<iota:generate-address config-ref="config">
 			<iota:generate-mode>
-				<iota:generate-address-options
+				<iota:generate-address-with-options
 					privateHexSeed="1234" accountIndex="0" addressRangeStart="0"
 					numberOfAddresses="1" />
 			</iota:generate-mode>

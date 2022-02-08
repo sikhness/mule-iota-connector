@@ -2,7 +2,6 @@ package org.mule.extension.iota.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.iota.client.Client;
 import org.mule.extension.iota.api.types.Address;
