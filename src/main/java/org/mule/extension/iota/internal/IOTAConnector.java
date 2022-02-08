@@ -9,6 +9,9 @@ import org.mule.extension.iota.internal.settings.FindMessageMode;
 import org.mule.extension.iota.internal.settings.GenerateAddressMode;
 import org.mule.extension.iota.internal.settings.GenerateAddressNewSettings;
 import org.mule.extension.iota.internal.settings.GenerateAddressOptionsSettings;
+import org.mule.extension.iota.internal.settings.SendIndexationMessageSettings;
+import org.mule.extension.iota.internal.settings.SendMessageMode;
+import org.mule.extension.iota.internal.settings.SendTransactionMessageSettings;
 import org.mule.runtime.extension.api.annotation.Configurations;
 import org.mule.runtime.extension.api.annotation.dsl.xml.Xml;
 
@@ -24,6 +27,8 @@ import org.mule.runtime.extension.api.annotation.dsl.xml.Xml;
 		GenerateAddressNewSettings.class })
 @SubTypeMapping(baseType = FindMessageMode.class, subTypes = { FindMessageByIdSettings.class,
 		FindMessageByIndex.class })
+@SubTypeMapping(baseType = SendMessageMode.class, subTypes = { SendIndexationMessageSettings.class,
+		SendTransactionMessageSettings.class })
 public class IOTAConnector {
 
 }

@@ -112,4 +112,46 @@ public final class IOTAFunctions {
 			throw new IllegalArgumentException(
 					"Invalid messageId specified. Ensure it is 64 characters in length with proper hexadecimal format.");
 	}
+
+	public static Message sendIndexationMessage(Client iotaClient, String index, String content,
+			boolean waitForConfirmation) {
+
+		org.iota.client.Message message = iotaClient.message().withIndexString(index).withDataString(content).finish();
+
+		// Check to see if message to be returned after it is confirmed on the tangle
+		if (waitForConfirmation)
+			iotaClient.retryUntilIncluded(message.id(), 0, 0);
+
+		return IOTAFunctions.findMessage(iotaClient, message.id().toString());
+	}
+
+	public static Message sendTransactionMessage(Client iotaClient, String privateHexSeed, long accountIndex,
+			String address, long amount, String index, String messageContent, boolean dustAllowanceTransaction,
+			boolean waitForConfirmation) {
+		org.iota.client.Message message;
+
+		// Check to see if transaction is a dust allowance transaction or normal
+		if (dustAllowanceTransaction)
+			// Check to see if index is provided
+			if (index == null || index.isEmpty())
+				message = iotaClient.message().withSeed(privateHexSeed).withAccountIndex(accountIndex)
+						.withDustAllowanceOutput(address, amount).finish();
+			else
+				message = iotaClient.message().withSeed(privateHexSeed).withAccountIndex(accountIndex)
+						.withIndexString(index).withDataString(messageContent).withDustAllowanceOutput(address, amount)
+						.finish();
+		// Check to see if normal transaction has an index provided
+		else if (index == null || index.isEmpty())
+			message = iotaClient.message().withSeed(privateHexSeed).withAccountIndex(accountIndex)
+					.withOutput(address, amount).finish();
+		else
+			message = iotaClient.message().withSeed(privateHexSeed).withAccountIndex(accountIndex)
+					.withIndexString(index).withDataString(messageContent).withOutput(address, amount).finish();
+
+		// Check to see if message to be returned after it is confirmed on the tangle
+		if (waitForConfirmation)
+			iotaClient.retryUntilIncluded(message.id(), 0, 0);
+
+		return IOTAFunctions.findMessage(iotaClient, message.id().toString());
+	}
 }

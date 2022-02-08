@@ -43,4 +43,14 @@
 		</iota:find-message>
 	</flow>
 
+	<flow name="sendMessageFlow">
+		<iota:send-message config-ref="config">
+			<iota:message-mode>
+				<iota:send-indexation-message
+					index="Index"
+					messageContent='#["This is test content&#10;Test is more test content"]' />
+			</iota:message-mode>
+		</iota:send-message>
+	</flow>
+
 </mule>

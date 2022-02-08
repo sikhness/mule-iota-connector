@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mule.runtime.extension.api.annotation.param.MediaType;
+import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.ParameterGroup;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.extension.iota.api.IOTAFunctions;
@@ -22,6 +23,9 @@ import org.mule.extension.iota.internal.settings.FindMessageSettings;
 import org.mule.extension.iota.internal.settings.GenerateAddressNewSettings;
 import org.mule.extension.iota.internal.settings.GenerateAddressOptionsSettings;
 import org.mule.extension.iota.internal.settings.GenerateAddressSettings;
+import org.mule.extension.iota.internal.settings.SendIndexationMessageSettings;
+import org.mule.extension.iota.internal.settings.SendMessageSettings;
+import org.mule.extension.iota.internal.settings.SendTransactionMessageSettings;
 import org.mule.runtime.extension.api.annotation.Alias;
 import org.mule.runtime.extension.api.annotation.param.Config;
 import org.mule.runtime.extension.api.annotation.param.Connection;
@@ -107,6 +111,33 @@ public class IOTAOperations {
 
 			return IOTAFunctions.findMessageByIndex(connection.getIotaClient(), findMessageByIndex.getIndex(),
 					findMessageByIndex.getMaxResults());
+		} else
+			return null;
+	}
+
+	@MediaType(value = ANY, strict = false)
+	@DisplayName("Send message")
+	@Alias("send-message")
+	public Message sendMessage(@Config IOTAConfiguration configuration, @Connection IOTAConnection connection,
+			@ParameterGroup(name = "Send Settings") SendMessageSettings sendMode,
+			@Optional(defaultValue = "True") @DisplayName("Wait for confirmation") boolean waitForConfirmation) {
+
+		if (sendMode.getMessageMode() instanceof SendIndexationMessageSettings) {
+			SendIndexationMessageSettings sendIndexationMessageSettings = (SendIndexationMessageSettings) sendMode
+					.getMessageMode();
+			return IOTAFunctions.sendIndexationMessage(connection.getIotaClient(),
+					sendIndexationMessageSettings.getIndex(), sendIndexationMessageSettings.getMessageContent(),
+					waitForConfirmation);
+		} else if (sendMode.getMessageMode() instanceof SendTransactionMessageSettings) {
+			SendTransactionMessageSettings sendTransactionMessageSettings = (SendTransactionMessageSettings) sendMode
+					.getMessageMode();
+			return IOTAFunctions.sendTransactionMessage(connection.getIotaClient(),
+					sendTransactionMessageSettings.getPrivateHexSeed(),
+					sendTransactionMessageSettings.getAccountIndex(), sendTransactionMessageSettings.getAddress(),
+					sendTransactionMessageSettings.getAmount(),
+					sendTransactionMessageSettings.getIndexationPayload().getIndex(),
+					sendTransactionMessageSettings.getIndexationPayload().getMessageContent(),
+					sendTransactionMessageSettings.getDustAllowanceTransaction(), waitForConfirmation);
 		} else
 			return null;
 	}

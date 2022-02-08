@@ -61,4 +61,11 @@ public class IOTAOperationsTestCase extends MuleArtifactFunctionalTestCase {
 				.getMessage().getPayload().getValue());
 		assertThat(payloadValue.get(0).getIndexationPayload().getIndex(), is("HORNET Spammer"));
 	}
+	
+	@Test
+	public void executeSendMessageOperation() throws Exception {
+		Message payloadValue = ((Message) flowRunner("sendMessageFlow").run()
+				.getMessage().getPayload().getValue());
+		assertThat(payloadValue.getIndexationPayload().getIndex(), is("Index"));
+	}
 }
