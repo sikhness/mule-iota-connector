@@ -133,11 +133,12 @@ public class IOTAOperations {
 					.getMessageMode();
 			return IOTAFunctions.sendTransactionMessage(connection.getIotaClient(),
 					sendTransactionMessageSettings.getPrivateHexSeed(),
-					sendTransactionMessageSettings.getAccountIndex(), sendTransactionMessageSettings.getAddress(),
-					sendTransactionMessageSettings.getAmount(),
+					sendTransactionMessageSettings.getAccountIndex(),
+					sendTransactionMessageSettings.getInputAddressRangeStart(),
+					sendTransactionMessageSettings.getInputAddressRangeEnd(),
+					sendTransactionMessageSettings.getAddressOutputs(),
 					sendTransactionMessageSettings.getIndexationPayload().getIndex(),
-					sendTransactionMessageSettings.getIndexationPayload().getMessageContent(),
-					sendTransactionMessageSettings.getDustAllowanceTransaction(), waitForConfirmation);
+					sendTransactionMessageSettings.getIndexationPayload().getMessageContent(), waitForConfirmation);
 		} else
 			return null;
 	}

@@ -8,6 +8,7 @@ import org.mule.extension.iota.api.types.Address;
 import org.mule.extension.iota.api.types.GenerateSeed;
 import org.mule.extension.iota.api.types.Message;
 import org.mule.extension.iota.api.types.RetrieveNodeInfo;
+import org.mule.extension.iota.internal.settings.AddressOutputSettings;
 
 public final class IOTAFunctions {
 
@@ -126,27 +127,31 @@ public final class IOTAFunctions {
 	}
 
 	public static Message sendTransactionMessage(Client iotaClient, String privateHexSeed, long accountIndex,
-			String address, long amount, String index, String messageContent, boolean dustAllowanceTransaction,
-			boolean waitForConfirmation) {
+			long inputAddressRangeStart, long inputAddressRangeEnd, List<AddressOutputSettings> addressOutputs,
+			String index, String messageContent, boolean waitForConfirmation) {
+
+		// Build messageBuilder with initial settings
+		org.iota.client.ClientMessageBuilder messageBuilder = iotaClient.message().withSeed(privateHexSeed)
+				.withAccountIndex(accountIndex).withInputRange(inputAddressRangeStart, inputAddressRangeEnd);
 		org.iota.client.Message message;
 
-		// Check to see if transaction is a dust allowance transaction or normal
-		if (dustAllowanceTransaction)
-			// Check to see if index is provided
-			if (index == null || index.isEmpty())
-				message = iotaClient.message().withSeed(privateHexSeed).withAccountIndex(accountIndex)
-						.withDustAllowanceOutput(address, amount).finish();
+		// Loop through each address output
+		for (AddressOutputSettings addressOutput : addressOutputs) {
+			// Check to see if output is a dust allowance output or normal and create
+			// appropriate output builder
+			if (addressOutput.getDustAllowanceOutput())
+				messageBuilder = messageBuilder.withDustAllowanceOutput(addressOutput.getAddress(),
+						addressOutput.getAmount());
 			else
-				message = iotaClient.message().withSeed(privateHexSeed).withAccountIndex(accountIndex)
-						.withIndexString(index).withDataString(messageContent).withDustAllowanceOutput(address, amount)
-						.finish();
-		// Check to see if normal transaction has an index provided
-		else if (index == null || index.isEmpty())
-			message = iotaClient.message().withSeed(privateHexSeed).withAccountIndex(accountIndex)
-					.withOutput(address, amount).finish();
-		else
-			message = iotaClient.message().withSeed(privateHexSeed).withAccountIndex(accountIndex)
-					.withIndexString(index).withDataString(messageContent).withOutput(address, amount).finish();
+				messageBuilder = messageBuilder.withOutput(addressOutput.getAddress(), addressOutput.getAmount());
+
+			// Check to see if output has an index provided
+			if (!(index == null || index.isEmpty()))
+				messageBuilder = messageBuilder.withIndexString(index).withDataString(messageContent);
+		}
+
+		// Send transaction message to tangle
+		message = messageBuilder.finish();
 
 		// Check to see if message to be returned after it is confirmed on the tangle
 		if (waitForConfirmation)
