@@ -367,6 +367,36 @@ public final class Client {
         return convRet;
     }
     private static native long do_parseBech32Address(String address);
+    /**
+     * Temporarily method to check if your seed is made using the incorrect generation of the old JAVA seed input
+     * @param seed The seed you used previously
+     * @param account_index The account index used, is 0 when you didnt use it
+     * @param address_index The address index you want to migrate
+     * @param pub_addr If it's a public or internal address
+     */
+    public final boolean shouldMigrate(String seed, long account_index, long address_index, boolean pub_addr) {
+        boolean ret = do_shouldMigrate(mNativeObj, seed, account_index, address_index, pub_addr);
+
+        return ret;
+    }
+    private static native boolean do_shouldMigrate(long self, String seed, long account_index, long address_index, boolean pub_addr);
+    /**
+     * Temporarily method in order to migrate wrongly generated seeds from JAVA to Rust
+     * Migrates the balance of the address towards the provided to_address
+     * And returns the message or an error
+     * @param seed The seed you used previously
+     * @param account_index The account index used, is 0 when you didnt use it
+     * @param address_index The address index you want to migrate
+     * @param pub_addr If it's a public or internal address
+     * @param to_address The address we send the balance to
+     */
+    public final Message migrate(String seed, long account_index, long address_index, boolean pub_addr, String to_address) {
+        long ret = do_migrate(mNativeObj, seed, account_index, address_index, pub_addr, to_address);
+        Message convRet = new Message(InternalPointerMarker.RAW_PTR, ret);
+
+        return convRet;
+    }
+    private static native long do_migrate(long self, String seed, long account_index, long address_index, boolean pub_addr, String to_address);
 
     public synchronized void delete() {
         if (mNativeObj != 0) {

@@ -16,6 +16,16 @@ public final class GetAddressesBuilder {
     }
     private static native long do_from(String seed);
     /**
+     * DEBUG DO NOT USE
+     */
+    public static GetAddressesBuilder fromOld(String seed) {
+        long ret = do_fromOld(seed);
+        GetAddressesBuilder convRet = new GetAddressesBuilder(InternalPointerMarker.RAW_PTR, ret);
+
+        return convRet;
+    }
+    private static native long do_fromOld(String seed);
+    /**
      * Set the account index
      */
     public final GetAddressesBuilder withAccountIndex(long account_index) {
