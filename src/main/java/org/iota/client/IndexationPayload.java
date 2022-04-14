@@ -19,6 +19,8 @@ public final class IndexationPayload {
     private static native String do_to_string(long self);
     /**
      * Creates a new `IndexationPayload`.
+     * @param index The index
+     * @param data The data linked ot this index
      */
     public static IndexationPayload fromBytes(byte [] index, byte [] data) {
         long ret = do_fromBytes(index, data);
@@ -29,6 +31,8 @@ public final class IndexationPayload {
     private static native long do_fromBytes(byte [] index, byte [] data);
     /**
      * Creates a new `IndexationPayload` from strings
+     * @param index The index
+     * @param data The data linked ot this index
      */
     public static IndexationPayload fromStrings(String index, String data) {
         long ret = do_fromStrings(index, data);

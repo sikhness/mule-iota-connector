@@ -11,6 +11,7 @@ public final class GetAddressBuilder {
      * Consume the builder and get the balance of a given Bech32 encoded address.
      * If count equals maxResults, then there might be more outputs available but those were skipped for performance
      * reasons. User should sweep the address to reduce the amount of outputs.
+     * @param address The address to get the balance for
      */
     public final BalanceAddressResponse balance(String address) {
         long ret = do_balance(mNativeObj, address);
@@ -23,6 +24,8 @@ public final class GetAddressBuilder {
      * Consume the builder and get all outputs that use a given address.
      * If count equals maxResults, then there might be more outputs available but those were skipped for performance
      * reasons. User should sweep the address to reduce the amount of outputs.
+     * @param address The address to get the balance for
+     * @param options The options for finding outputs
      */
     public final UtxoInput [] outputs(String address, OutputsOptions options) {
         long a1 = options.mNativeObj;

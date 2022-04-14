@@ -17,7 +17,9 @@ public final class MilestoneSignature {
         return ret;
     }
     private static native String do_to_string(long self);
-
+    /**
+     * Gets the signature of the milestone
+     */
     public final byte [] getSignature() {
         byte [] ret = do_getSignature(mNativeObj);
 

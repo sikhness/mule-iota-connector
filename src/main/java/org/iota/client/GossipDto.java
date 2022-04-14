@@ -3,9 +3,23 @@ package org.iota.client;
 
 
 public final class GossipDto {
+    @Override
+    public String toString() {{
+        return this.to_string();
+    }}
+
 
     private GossipDto() {}
 
+    private final String to_string() {
+        String ret = do_to_string(mNativeObj);
+
+        return ret;
+    }
+    private static native String do_to_string(long self);
+    /**
+     * The hearthbeat information
+     */
     public final HeartbeatDto heartbeat() {
         long ret = do_heartbeat(mNativeObj);
         HeartbeatDto convRet = new HeartbeatDto(InternalPointerMarker.RAW_PTR, ret);
@@ -13,7 +27,9 @@ public final class GossipDto {
         return convRet;
     }
     private static native long do_heartbeat(long self);
-
+    /**
+     * The metrics information
+     */
     public final MetricsDto metrics() {
         long ret = do_metrics(mNativeObj);
         MetricsDto convRet = new MetricsDto(InternalPointerMarker.RAW_PTR, ret);

@@ -10,8 +10,17 @@ public final class MigratedFundsEntry {
 
 
     private MigratedFundsEntry() {}
+
+    private final String to_string() {
+        String ret = do_to_string(mNativeObj);
+
+        return ret;
+    }
+    private static native String do_to_string(long self);
     /**
      * Creates a new `MigratedFundsEntry`.
+     * @param hash The hash from the transaction used to receive the funds
+     * @param output the output related to this transaction
      */
     public static MigratedFundsEntry from(String hash, SignatureLockedSingleOutput output) {
         long a1 = output.mNativeObj;
@@ -25,13 +34,6 @@ public final class MigratedFundsEntry {
         return convRet;
     }
     private static native long do_from(String hash, long output);
-
-    private final String to_string() {
-        String ret = do_to_string(mNativeObj);
-
-        return ret;
-    }
-    private static native String do_to_string(long self);
     /**
      * Returns the tail transaction hash of a `MigratedFundsEntry`.
      */

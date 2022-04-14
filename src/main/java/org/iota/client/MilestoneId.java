@@ -3,6 +3,17 @@ package org.iota.client;
 
 
 public final class MilestoneId {
+    public boolean equals(Object obj) {
+        boolean equal = false;
+        if (obj instanceof MilestoneId)
+        equal = ((MilestoneId)obj).rustEq(this);
+        return equal;
+    }
+
+    public int hashCode() {
+        return (int)mNativeObj;
+    }
+
     @Override
     public String toString() {{
         return this.to_string();
@@ -10,13 +21,25 @@ public final class MilestoneId {
 
 
     private MilestoneId() {}
-
+    /**
+     * Create a MilestoneId from string
+     */
     private final String to_string() {
         String ret = do_to_string(mNativeObj);
 
         return ret;
     }
     private static native String do_to_string(long self);
+
+    private final boolean rustEq(MilestoneId o) {
+        long a0 = o.mNativeObj;
+        boolean ret = do_rustEq(mNativeObj, a0);
+
+        JNIReachabilityFence.reachabilityFence1(o);
+
+        return ret;
+    }
+    private static native boolean do_rustEq(long self, long o);
 
     public static MilestoneId fromString(String str_rep) {
         long ret = do_fromString(str_rep);

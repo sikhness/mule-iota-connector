@@ -17,14 +17,18 @@ public final class Signature {
         return ret;
     }
     private static native String do_to_string(long self);
-
+    /**
+     * Turn the signature into bytes
+     */
     public final byte [] toBytes() {
         byte [] ret = do_toBytes(mNativeObj);
 
         return ret;
     }
     private static native byte [] do_toBytes(long self);
-
+    /**
+     * Turns bytes into a signature
+     */
     public static Signature fromBytes(byte [] bs) {
         long ret = do_fromBytes(bs);
         Signature convRet = new Signature(InternalPointerMarker.RAW_PTR, ret);

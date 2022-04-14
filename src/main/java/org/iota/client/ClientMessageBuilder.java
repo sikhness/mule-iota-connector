@@ -7,6 +7,7 @@ public final class ClientMessageBuilder {
     private ClientMessageBuilder() {}
     /**
      * Sets the seed.
+     * @param seed The seed to use
      */
     public final ClientMessageBuilder withSeed(String seed) {
         long ret = do_withSeed(mNativeObj, seed);
@@ -17,6 +18,7 @@ public final class ClientMessageBuilder {
     private static native long do_withSeed(long self, String seed);
     /**
      * Sets the account index.
+     * @param account_index The index to set
      */
     public final ClientMessageBuilder withAccountIndex(long account_index) {
         long ret = do_withAccountIndex(mNativeObj, account_index);
@@ -27,6 +29,7 @@ public final class ClientMessageBuilder {
     private static native long do_withAccountIndex(long self, long account_index);
     /**
      * Sets the index of the address to start looking for balance.
+     * @param initial_address_index The initial index to start address search from
      */
     public final ClientMessageBuilder withInitialAddressIndex(long initial_address_index) {
         long ret = do_withInitialAddressIndex(mNativeObj, initial_address_index);
@@ -37,6 +40,7 @@ public final class ClientMessageBuilder {
     private static native long do_withInitialAddressIndex(long self, long initial_address_index);
     /**
      * Set a custom input(transaction output)
+     * @param input The custom input
      */
     public final ClientMessageBuilder withInput(UtxoInput input) {
         long a0 = input.mNativeObj;
@@ -52,6 +56,8 @@ public final class ClientMessageBuilder {
     private static native long do_withInput(long self, long input);
     /**
      * Set a custom range in which to search for addresses for custom inputs. Default: 0..100
+     * @param low Low end of input range (0)
+     * @param high Upper end of input range (100)
      */
     public final ClientMessageBuilder withInputRange(long low, long high) {
         long ret = do_withInputRange(mNativeObj, low, high);
@@ -61,7 +67,9 @@ public final class ClientMessageBuilder {
     }
     private static native long do_withInputRange(long self, long low, long high);
     /**
-     * Set a transfer to the builder
+     * Insert the output address and amount to spent. The amount cannot be zero.
+     * @param address The address we send to
+     * @param amount The amount to send (> 0)
      */
     public final ClientMessageBuilder withOutput(String address, long amount) {
         long ret = do_withOutput(mNativeObj, address, amount);
@@ -72,6 +80,8 @@ public final class ClientMessageBuilder {
     private static native long do_withOutput(long self, String address, long amount);
     /**
      * Set a dust allowance transfer to the builder, address needs to be Bech32 encoded
+     * @param address The Bech32 encoded address we send to
+     * @param amount The amount to send (> 0)
      */
     public final ClientMessageBuilder withDustAllowanceOutput(String address, long amount) {
         long ret = do_withDustAllowanceOutput(mNativeObj, address, amount);
@@ -82,6 +92,8 @@ public final class ClientMessageBuilder {
     private static native long do_withDustAllowanceOutput(long self, String address, long amount);
     /**
      * Set a transfer to the builder, address needs to be hex encoded
+     * @param address The hex encoded address we send to
+     * @param amount The amount to send (> 0)
      */
     public final ClientMessageBuilder withOutputHex(String address, long amount) {
         long ret = do_withOutputHex(mNativeObj, address, amount);
@@ -92,6 +104,7 @@ public final class ClientMessageBuilder {
     private static native long do_withOutputHex(long self, String address, long amount);
     /**
      * Set indexation to the builder
+     * @param index The index to use
      */
     public final ClientMessageBuilder withIndexVec(byte [] index) {
         long ret = do_withIndexVec(mNativeObj, index);
@@ -102,6 +115,7 @@ public final class ClientMessageBuilder {
     private static native long do_withIndexVec(long self, byte [] index);
     /**
      * Set indexation to the builder
+     * @param index The index to use
      */
     public final ClientMessageBuilder withIndexString(String index) {
         long ret = do_withIndexString(mNativeObj, index);
@@ -112,6 +126,7 @@ public final class ClientMessageBuilder {
     private static native long do_withIndexString(long self, String index);
     /**
      * Set data to the builder
+     * @param data The data to use
      */
     public final ClientMessageBuilder withData(byte [] data) {
         long ret = do_withData(mNativeObj, data);
@@ -122,6 +137,7 @@ public final class ClientMessageBuilder {
     private static native long do_withData(long self, byte [] data);
     /**
      * Set data to the builder
+     * @param data The data to use
      */
     public final ClientMessageBuilder withDataString(String data) {
         long ret = do_withDataString(mNativeObj, data);
@@ -131,7 +147,7 @@ public final class ClientMessageBuilder {
     }
     private static native long do_withDataString(long self, String data);
     /**
-     * Prepare a transaction
+     * Prepare a transaction. Used as parameter for `signTransaction`
      */
     public final PreparedTransactionData prepareTransaction() {
         long ret = do_prepareTransaction(mNativeObj);
@@ -142,6 +158,10 @@ public final class ClientMessageBuilder {
     private static native long do_prepareTransaction(long self);
     /**
      * Sign the transaction. inputsRangeLow and high to 0 for not using an input range
+     * @param prepared_transaction_data The completely prepared transaction
+     * @param seed The seed used to prepare the transaction
+     * @param inputs_range_low Lower input used for getting adresses (default: 0)
+     * @param inputs_range_high Upper input used for getting adresses (default: 100)
      */
     public final MessagePayload signTransaction(PreparedTransactionData prepared_transaction_data, String seed, long inputs_range_low, long inputs_range_high) {
         long a0 = prepared_transaction_data.mNativeObj;
@@ -157,6 +177,7 @@ public final class ClientMessageBuilder {
     private static native long do_signTransaction(long self, long prepared_transaction_data, String seed, long inputs_range_low, long inputs_range_high);
     /**
      * Consume the builder and return the message made with the specific payload
+     * @param payload A prepared and signed MessagePayload
      */
     public final Message finish(MessagePayload payload) {
         long a0 = payload.mNativeObj;
@@ -172,6 +193,7 @@ public final class ClientMessageBuilder {
     private static native long do_finish(long self, long payload);
     /**
      * Consume the builder and return the message made with the specific payload
+     * @param payload A prepared and signed TransactionPayload
      */
     public final Message finishTransaction(TransactionPayload payload) {
         long a0 = payload.mNativeObj;
@@ -187,6 +209,7 @@ public final class ClientMessageBuilder {
     private static native long do_finishTransaction(long self, long payload);
     /**
      * Consume the builder and return the message made with the specific payload
+     * @param payload A prepared and signed MilestonePayload
      */
     public final Message finishMilestone(MilestonePayload payload) {
         long a0 = payload.mNativeObj;
@@ -202,6 +225,7 @@ public final class ClientMessageBuilder {
     private static native long do_finishMilestone(long self, long payload);
     /**
      * Consume the builder and return the message made with the specific payload
+     * @param payload A prepared and signed IndexationPayload
      */
     public final Message finishIndex(IndexationPayload payload) {
         long a0 = payload.mNativeObj;
@@ -217,6 +241,7 @@ public final class ClientMessageBuilder {
     private static native long do_finishIndex(long self, long payload);
     /**
      * Consume the builder and return the message made with the specific payload
+     * @param payload A prepared and signed ReceiptPayload
      */
     public final Message finishReceipt(ReceiptPayload payload) {
         long a0 = payload.mNativeObj;
@@ -232,6 +257,7 @@ public final class ClientMessageBuilder {
     private static native long do_finishReceipt(long self, long payload);
     /**
      * Consume the builder and return the message made with the specific payload
+     * @param payload A prepared and signed TreasuryPayload
      */
     public final Message finishTreasury(TreasuryPayload payload) {
         long a0 = payload.mNativeObj;

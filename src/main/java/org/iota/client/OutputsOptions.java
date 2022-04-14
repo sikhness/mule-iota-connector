@@ -8,7 +8,9 @@ public final class OutputsOptions {
         return this.to_string();
     }}
 
-
+    /**
+     * Creates a new instance of output options with default values
+     */
     public OutputsOptions() {
         mNativeObj = init();
     }

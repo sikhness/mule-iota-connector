@@ -3,16 +3,32 @@ package org.iota.client;
 
 
 public final class MigratedFundsEntryDto {
+    @Override
+    public String toString() {{
+        return this.to_string();
+    }}
+
 
     private MigratedFundsEntryDto() {}
 
-    public final String tail_transaction_hash() {
-        String ret = do_tail_transaction_hash(mNativeObj);
+    private final String to_string() {
+        String ret = do_to_string(mNativeObj);
 
         return ret;
     }
-    private static native String do_tail_transaction_hash(long self);
+    private static native String do_to_string(long self);
+    /**
+     * The tail transaction hash
+     */
+    public final String tailTransactionHash() {
+        String ret = do_tailTransactionHash(mNativeObj);
 
+        return ret;
+    }
+    private static native String do_tailTransactionHash(long self);
+    /**
+     * The address this was deposited to
+     */
     public final AddressDto address() {
         long ret = do_address(mNativeObj);
         AddressDto convRet = new AddressDto(InternalPointerMarker.RAW_PTR, ret);
@@ -20,7 +36,9 @@ public final class MigratedFundsEntryDto {
         return convRet;
     }
     private static native long do_address(long self);
-
+    /**
+     * The amount that was deposited
+     */
     public final long deposit() {
         long ret = do_deposit(mNativeObj);
 

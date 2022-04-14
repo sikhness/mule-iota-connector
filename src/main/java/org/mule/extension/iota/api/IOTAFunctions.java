@@ -67,7 +67,7 @@ public final class IOTAFunctions {
 			long addressRangeStart, long addressRangeEnd) {
 
 		long addressIndex = org.iota.client.Util.searchAddress(privateHexSeed, getNodeInfo(iotaClient).getBech32Hrp(),
-				accountIndex, addressRangeStart, addressRangeEnd, org.iota.client.Address.try_from_bech32(address))
+				accountIndex, addressRangeStart, addressRangeEnd, org.iota.client.Address.tryFromBech32(address))
 				.index();
 		org.iota.client.BalanceAddressResponse addressBalanceResponse = iotaClient.getAddressBalance(address);
 

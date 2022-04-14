@@ -21,6 +21,7 @@ public final class PreparedTransactionData {
     private static native String do_to_string(long self);
     /**
      * Turns a serialized preparedTransactionData string back into its class
+     * @param serialised_data The serialised transaction data
      */
     public static PreparedTransactionData deserialize(String serialised_data) {
         long ret = do_deserialize(serialised_data);

@@ -19,6 +19,7 @@ public final class ReferenceUnlock {
     private static native String do_to_string(long self);
     /**
      * Creates a new `ReferenceUnlock`.
+     * @param index The unlock block index we use for signature
      */
     public static ReferenceUnlock from(int index) {
         long ret = do_from(index);

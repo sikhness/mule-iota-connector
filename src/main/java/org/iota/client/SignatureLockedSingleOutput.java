@@ -21,6 +21,8 @@ public final class SignatureLockedSingleOutput {
     private static native String do_to_string(long self);
     /**
      * Creates a new `SignatureLockedSingleOutput`.
+     * @param address The address to set
+     * @param amount The amount to set
      */
     public static SignatureLockedSingleOutput from(Address address, long amount) {
         long a0 = address.mNativeObj;

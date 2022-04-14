@@ -3,6 +3,17 @@ package org.iota.client;
 
 
 public final class AddressStringPublicWrapper {
+    public boolean equals(Object obj) {
+        boolean equal = false;
+        if (obj instanceof AddressStringPublicWrapper)
+        equal = ((AddressStringPublicWrapper)obj).rustEq(this);
+        return equal;
+    }
+
+    public int hashCode() {
+        return (int)mNativeObj;
+    }
+
     @Override
     public String toString() {{
         return this.to_string();
@@ -10,6 +21,13 @@ public final class AddressStringPublicWrapper {
 
 
     private AddressStringPublicWrapper() {}
+
+    private final String to_string() {
+        String ret = do_to_string(mNativeObj);
+
+        return ret;
+    }
+    private static native String do_to_string(long self);
 
     private final boolean rustEq(AddressStringPublicWrapper o) {
         long a0 = o.mNativeObj;
@@ -20,21 +38,18 @@ public final class AddressStringPublicWrapper {
         return ret;
     }
     private static native boolean do_rustEq(long self, long o);
-
-    private final String to_string() {
-        String ret = do_to_string(mNativeObj);
-
-        return ret;
-    }
-    private static native String do_to_string(long self);
-
+    /**
+     * If this is a publci address
+     */
     public final boolean isPublic() {
         boolean ret = do_isPublic(mNativeObj);
 
         return ret;
     }
     private static native boolean do_isPublic(long self);
-
+    /**
+     * The address itself
+     */
     public final String address() {
         String ret = do_address(mNativeObj);
 

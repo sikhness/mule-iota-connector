@@ -17,28 +17,36 @@ public final class ReceiptPayloadDto {
         return ret;
     }
     private static native String do_to_string(long self);
-
+    /**
+     * The type of receipt
+     */
     public final long kind() {
         long ret = do_kind(mNativeObj);
 
         return ret;
     }
     private static native long do_kind(long self);
-
+    /**
+     * The milestone index at which the funds of a `ReceiptPayload` were migrated
+     */
     public final long migratedAt() {
         long ret = do_migratedAt(mNativeObj);
 
         return ret;
     }
     private static native long do_migratedAt(long self);
-
+    /**
+     * The funds which are migrated
+     */
     public final MigratedFundsEntryDto [] funds() {
         MigratedFundsEntryDto [] ret = do_funds(mNativeObj);
 
         return ret;
     }
     private static native MigratedFundsEntryDto [] do_funds(long self);
-
+    /**
+     * Whether a `ReceiptPayload` is the final one for a given migrated at index.
+     */
     public final boolean last() {
         boolean ret = do_last(mNativeObj);
 

@@ -3,37 +3,59 @@ package org.iota.client;
 
 
 public final class HeartbeatDto {
+    @Override
+    public String toString() {{
+        return this.to_string();
+    }}
+
 
     private HeartbeatDto() {}
 
+    private final String to_string() {
+        String ret = do_to_string(mNativeObj);
+
+        return ret;
+    }
+    private static native String do_to_string(long self);
+    /**
+     * The solid milestone index
+     */
     public final long solidMilestoneIndex() {
         long ret = do_solidMilestoneIndex(mNativeObj);
 
         return ret;
     }
     private static native long do_solidMilestoneIndex(long self);
-
+    /**
+     * The pruend milestone index
+     */
     public final long prunedMilestoneIndex() {
         long ret = do_prunedMilestoneIndex(mNativeObj);
 
         return ret;
     }
     private static native long do_prunedMilestoneIndex(long self);
-
+    /**
+     * The latest milestone index
+     */
     public final long latestMilestoneIndex() {
         long ret = do_latestMilestoneIndex(mNativeObj);
 
         return ret;
     }
     private static native long do_latestMilestoneIndex(long self);
-
+    /**
+     * The amount of connected neighbors
+     */
     public final short connectedNeighbors() {
         short ret = do_connectedNeighbors(mNativeObj);
 
         return ret;
     }
     private static native short do_connectedNeighbors(long self);
-
+    /**
+     * The amount of synced neighbors
+     */
     public final short syncedNeighbors() {
         short ret = do_syncedNeighbors(mNativeObj);
 

@@ -14,6 +14,7 @@ public final class MessageBuilder {
     private static native long init();
     /**
      * Adds a network id to a `MessageBuilder`.
+     * @param network_id The network id
      */
     public final MessageBuilder networkId(long network_id) {
         long ret = do_networkId(mNativeObj, network_id);
@@ -24,6 +25,7 @@ public final class MessageBuilder {
     private static native long do_networkId(long self, long network_id);
     /**
      * Adds parents to a `MessageBuilder`.
+     * @param parents A list of parents to set
      */
     public final MessageBuilder parents(MessageId[] parents) {
         long ret = do_parents(mNativeObj, parents);
@@ -34,6 +36,7 @@ public final class MessageBuilder {
     private static native long do_parents(long self, MessageId[] parents);
     /**
      * Adds a payload to a `MessageBuilder`.
+     * @param payload the MessagePayload to set
      */
     public final MessageBuilder payload(MessagePayload payload) {
         long a0 = payload.mNativeObj;
@@ -47,7 +50,26 @@ public final class MessageBuilder {
         return convRet;
     }
     private static native long do_payload(long self, long payload);
+    /**
+     * Sets a provider for the nonce. Can currently only be obtained from Client.getPowProvider
+     * @param provider Sets the nonce provider
+     * @param target_score Target score for the nonce, Recommended: 4000
+     */
+    public final MessageBuilder nonceProvider(ClientMiner provider, double target_score) {
+        long a0 = provider.mNativeObj;
+        provider.mNativeObj = 0;
 
+        long ret = do_nonceProvider(mNativeObj, a0, target_score);
+        MessageBuilder convRet = new MessageBuilder(InternalPointerMarker.RAW_PTR, ret);
+
+        JNIReachabilityFence.reachabilityFence1(provider);
+
+        return convRet;
+    }
+    private static native long do_nonceProvider(long self, long provider, double target_score);
+    /**
+     * Finish the MessageBuilder
+     */
     public final Message finish() {
         long ret = do_finish(mNativeObj);
         Message convRet = new Message(InternalPointerMarker.RAW_PTR, ret);

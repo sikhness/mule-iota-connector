@@ -3,6 +3,17 @@ package org.iota.client;
 
 
 public final class MessageWrap {
+    public boolean equals(Object obj) {
+        boolean equal = false;
+        if (obj instanceof MessageWrap)
+        equal = ((MessageWrap)obj).rustEq(this);
+        return equal;
+    }
+
+    public int hashCode() {
+        return (int)mNativeObj;
+    }
+
     @Override
     public String toString() {{
         return this.to_string();
@@ -18,6 +29,18 @@ public final class MessageWrap {
     }
     private static native String do_to_string(long self);
 
+    private final boolean rustEq(MessageWrap o) {
+        long a0 = o.mNativeObj;
+        boolean ret = do_rustEq(mNativeObj, a0);
+
+        JNIReachabilityFence.reachabilityFence1(o);
+
+        return ret;
+    }
+    private static native boolean do_rustEq(long self, long o);
+    /**
+     * The ID of this message
+     */
     public final MessageId message_id() {
         long ret = do_message_id(mNativeObj);
         MessageId convRet = new MessageId(InternalPointerMarker.RAW_PTR, ret);
@@ -25,7 +48,9 @@ public final class MessageWrap {
         return convRet;
     }
     private static native long do_message_id(long self);
-
+    /**
+     * The message
+     */
     public final Message message() {
         long ret = do_message(mNativeObj);
         Message convRet = new Message(InternalPointerMarker.RAW_PTR, ret);

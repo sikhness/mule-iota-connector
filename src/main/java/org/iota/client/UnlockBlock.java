@@ -26,31 +26,21 @@ public final class UnlockBlock {
     }
     private static native int do_kind(long self);
 
-    public final java.util.Optional<ReferenceUnlock> getAsReference() {
-        long ret = do_getAsReference(mNativeObj);
-        java.util.Optional<ReferenceUnlock> convRet;
-        if (ret != 0) {
-            convRet = java.util.Optional.of(new ReferenceUnlock(InternalPointerMarker.RAW_PTR, ret));
-        } else {
-            convRet = java.util.Optional.empty();
-        }
+    public final ReferenceUnlock asReference() {
+        long ret = do_asReference(mNativeObj);
+        ReferenceUnlock convRet = new ReferenceUnlock(InternalPointerMarker.RAW_PTR, ret);
 
         return convRet;
     }
-    private static native long do_getAsReference(long self);
+    private static native long do_asReference(long self);
 
-    public final java.util.Optional<SignatureUnlock> getAsSignature() {
-        long ret = do_getAsSignature(mNativeObj);
-        java.util.Optional<SignatureUnlock> convRet;
-        if (ret != 0) {
-            convRet = java.util.Optional.of(new SignatureUnlock(InternalPointerMarker.RAW_PTR, ret));
-        } else {
-            convRet = java.util.Optional.empty();
-        }
+    public final SignatureUnlock asSignature() {
+        long ret = do_asSignature(mNativeObj);
+        SignatureUnlock convRet = new SignatureUnlock(InternalPointerMarker.RAW_PTR, ret);
 
         return convRet;
     }
-    private static native long do_getAsSignature(long self);
+    private static native long do_asSignature(long self);
 
     public synchronized void delete() {
         if (mNativeObj != 0) {

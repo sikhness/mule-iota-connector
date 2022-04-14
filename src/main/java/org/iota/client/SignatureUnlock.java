@@ -8,7 +8,11 @@ public final class SignatureUnlock {
         return this.to_string();
     }}
 
-
+    /**
+     * Create a new Signature inlock block
+     * @param public_key The public ket used for this signature block
+     * @param signature The signature created for this unlock block
+     */
     public SignatureUnlock(byte [] public_key, byte [] signature) {
         mNativeObj = init(public_key, signature);
     }

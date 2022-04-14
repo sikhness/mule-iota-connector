@@ -3,6 +3,17 @@ package org.iota.client;
 
 
 public final class AddressDto {
+    public boolean equals(Object obj) {
+        boolean equal = false;
+        if (obj instanceof AddressDto)
+        equal = ((AddressDto)obj).rustEq(this);
+        return equal;
+    }
+
+    public int hashCode() {
+        return (int)mNativeObj;
+    }
+
     @Override
     public String toString() {{
         return this.to_string();
@@ -18,13 +29,27 @@ public final class AddressDto {
     }
     private static native String do_to_string(long self);
 
+    private final boolean rustEq(AddressDto o) {
+        long a0 = o.mNativeObj;
+        boolean ret = do_rustEq(mNativeObj, a0);
+
+        JNIReachabilityFence.reachabilityFence1(o);
+
+        return ret;
+    }
+    private static native boolean do_rustEq(long self, long o);
+    /**
+     * The kind of address
+     */
     public final short kind() {
         short ret = do_kind(mNativeObj);
 
         return ret;
     }
     private static native short do_kind(long self);
-
+    /**
+     * The address itself
+     */
     public final String address() {
         String ret = do_address(mNativeObj);
 

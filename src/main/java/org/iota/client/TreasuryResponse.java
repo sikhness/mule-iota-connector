@@ -41,14 +41,18 @@ public final class TreasuryResponse {
         return ret;
     }
     private static native boolean do_rustEq(long self, long o);
-
+    /**
+     * The amount in the treasury
+     */
     public final long amount() {
         long ret = do_amount(mNativeObj);
 
         return ret;
     }
     private static native long do_amount(long self);
-
+    /**
+     * The milestone ID this reponse relates to
+     */
     public final String milestoneId() {
         String ret = do_milestoneId(mNativeObj);
 

@@ -40,6 +40,8 @@ public final class MilestonePayload {
     private static native MilestoneSignature [] do_signatures(long self);
     /**
      * Semantically validate a `MilestonePayload`.
+     * @param applicable_public_keys The public keys to use to validate
+     * @param min_threshold THe minimum threshold for this to succeed (0...100)
      */
     public final void validate(java.lang.String [] applicable_public_keys, long min_threshold) {
         do_validate(mNativeObj, applicable_public_keys, min_threshold);

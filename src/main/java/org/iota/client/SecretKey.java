@@ -17,7 +17,9 @@ public final class SecretKey {
         return ret;
     }
     private static native String do_to_string(long self);
-
+    /**
+     * Generate a new secret key
+     */
     public static SecretKey generate() {
         long ret = do_generate();
         SecretKey convRet = new SecretKey(InternalPointerMarker.RAW_PTR, ret);
@@ -25,15 +27,20 @@ public final class SecretKey {
         return convRet;
     }
     private static native long do_generate();
-
-    public static SecretKey fromBytes(byte [] bs) {
-        long ret = do_fromBytes(bs);
+    /**
+     * Create a new secret key from the bytes
+     * @param bytes The bytes to create the key from
+     */
+    public static SecretKey fromBytes(byte [] bytes) {
+        long ret = do_fromBytes(bytes);
         SecretKey convRet = new SecretKey(InternalPointerMarker.RAW_PTR, ret);
 
         return convRet;
     }
-    private static native long do_fromBytes(byte [] bs);
-
+    private static native long do_fromBytes(byte [] bytes);
+    /**
+     * Derive a public key from the secret key
+     */
     public final PublicKey publicKey() {
         long ret = do_publicKey(mNativeObj);
         PublicKey convRet = new PublicKey(InternalPointerMarker.RAW_PTR, ret);
@@ -41,21 +48,26 @@ public final class SecretKey {
         return convRet;
     }
     private static native long do_publicKey(long self);
-
+    /**
+     * Turn this Secret key into bytes
+     */
     public final byte [] toBytes() {
         byte [] ret = do_toBytes(mNativeObj);
 
         return ret;
     }
     private static native byte [] do_toBytes(long self);
-
-    public final Signature sign(byte [] msg) {
-        long ret = do_sign(mNativeObj, msg);
+    /**
+     * Sign the bytes using this key
+     * @param bytes the Bytes to sign
+     */
+    public final Signature sign(byte [] bytes) {
+        long ret = do_sign(mNativeObj, bytes);
         Signature convRet = new Signature(InternalPointerMarker.RAW_PTR, ret);
 
         return convRet;
     }
-    private static native long do_sign(long self, byte [] msg);
+    private static native long do_sign(long self, byte [] bytes);
 
     public synchronized void delete() {
         if (mNativeObj != 0) {

@@ -17,7 +17,18 @@ public final class TreasuryOutputDto {
         return ret;
     }
     private static native String do_to_string(long self);
+    /**
+     * The type of Treasury DTO
+     */
+    public final short kind() {
+        short ret = do_kind(mNativeObj);
 
+        return ret;
+    }
+    private static native short do_kind(long self);
+    /**
+     * The amount in the treasury
+     */
     public final long amount() {
         long ret = do_amount(mNativeObj);
 

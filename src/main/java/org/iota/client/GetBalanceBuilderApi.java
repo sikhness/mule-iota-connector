@@ -7,6 +7,7 @@ public final class GetBalanceBuilderApi {
     private GetBalanceBuilderApi() {}
     /**
      * Sets the account index.
+     * @param account_index The account index to use (Default: 0)
      */
     public final GetBalanceBuilderApi withAccountIndex(long account_index) {
         long ret = do_withAccountIndex(mNativeObj, account_index);
@@ -17,6 +18,7 @@ public final class GetBalanceBuilderApi {
     private static native long do_withAccountIndex(long self, long account_index);
     /**
      * Sets the index of the address to start looking for balance.
+     * @param initial_address_index The starting index to use for searching addresses (Default: 0)
      */
     public final GetBalanceBuilderApi withInitialAddressIndex(long initial_address_index) {
         long ret = do_withInitialAddressIndex(mNativeObj, initial_address_index);
@@ -28,6 +30,7 @@ public final class GetBalanceBuilderApi {
     /**
      * Sets the gap limit to specify how many addresses will be checked each round.
      * If gap_limit amount of addresses in a row have no balance the function will return.
+     * @param gap_limit The gap limit (Default: 20)
      */
     public final GetBalanceBuilderApi withGapLimit(long gap_limit) {
         long ret = do_withGapLimit(mNativeObj, gap_limit);

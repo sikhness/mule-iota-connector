@@ -8,6 +8,7 @@ public final class GetMessageBuilder {
     /**
      * GET /api/v1/messages?index={Index} endpoint
      * Consume the builder and search for messages matching the index
+     * @param index the index string
      */
     public final MessageId [] indexString(String index) {
         MessageId [] ret = do_indexString(mNativeObj, index);
@@ -18,6 +19,7 @@ public final class GetMessageBuilder {
     /**
      * GET /api/v1/messages?index={Index} endpoint
      * Consume the builder and search for messages matching the index
+     * @param index the index in bytes
      */
     public final MessageId [] indexVec(byte [] index) {
         MessageId [] ret = do_indexVec(mNativeObj, index);
@@ -28,6 +30,7 @@ public final class GetMessageBuilder {
     /**
      * GET /api/v1/messages/{messageID} endpoint
      * Consume the builder and find a message by its identifer. This method returns the given message object.
+     * @param message_id The id of the message to find
      */
     public final Message data(MessageId message_id) {
         long a0 = message_id.mNativeObj;
@@ -44,6 +47,7 @@ public final class GetMessageBuilder {
     /**
      * GET /api/v1/messages/{messageID}/metadata endpoint
      * Consume the builder and find a message by its identifer. This method returns the given message metadata.
+     * @param message_id The id of the message to find
      */
     public final MessageMetadata metadata(MessageId message_id) {
         long a0 = message_id.mNativeObj;
@@ -60,6 +64,7 @@ public final class GetMessageBuilder {
     /**
      * GET /api/v1/messages/{messageID}/raw endpoint
      * Consume the builder and find a message by its identifer. This method returns the given message raw data.
+     * @param message_id The id of the message to find
      */
     public final String raw(MessageId message_id) {
         long a0 = message_id.mNativeObj;
@@ -75,6 +80,7 @@ public final class GetMessageBuilder {
     /**
      * GET /api/v1/messages/{messageID}/children endpoint
      * Consume the builder and returns the list of message IDs that reference a message by its identifier.
+     * @param message_id The id of the message to find
      */
     public final MessageId [] children(MessageId message_id) {
         long a0 = message_id.mNativeObj;

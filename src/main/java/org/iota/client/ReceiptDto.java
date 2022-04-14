@@ -17,7 +17,19 @@ public final class ReceiptDto {
         return ret;
     }
     private static native String do_to_string(long self);
+    /**
+     * Get the receipt payload
+     */
+    public final ReceiptPayloadDto receipt() {
+        long ret = do_receipt(mNativeObj);
+        ReceiptPayloadDto convRet = new ReceiptPayloadDto(InternalPointerMarker.RAW_PTR, ret);
 
+        return convRet;
+    }
+    private static native long do_receipt(long self);
+    /**
+     * Get the milestone index this receipt is related to
+     */
     public final long milestoneIndex() {
         long ret = do_milestoneIndex(mNativeObj);
 

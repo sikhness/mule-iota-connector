@@ -8,6 +8,17 @@ public final class Input {
         return this.to_string();
     }}
 
+    public boolean equals(Object obj) {
+        boolean equal = false;
+        if (obj instanceof Input)
+        equal = ((Input)obj).rustEq(this);
+        return equal;
+    }
+
+    public int hashCode() {
+        return (int)mNativeObj;
+    }
+
 
     private Input() {}
 
@@ -18,6 +29,16 @@ public final class Input {
     }
     private static native String do_to_string(long self);
 
+    private final boolean rustEq(Input o) {
+        long a0 = o.mNativeObj;
+        boolean ret = do_rustEq(mNativeObj, a0);
+
+        JNIReachabilityFence.reachabilityFence1(o);
+
+        return ret;
+    }
+    private static native boolean do_rustEq(long self, long o);
+
     public final InputKind kind() {
         int ret = do_kind(mNativeObj);
         InputKind convRet = InputKind.fromInt(ret);
@@ -25,6 +46,22 @@ public final class Input {
         return convRet;
     }
     private static native int do_kind(long self);
+
+    public final UtxoInput asUtxo() {
+        long ret = do_asUtxo(mNativeObj);
+        UtxoInput convRet = new UtxoInput(InternalPointerMarker.RAW_PTR, ret);
+
+        return convRet;
+    }
+    private static native long do_asUtxo(long self);
+
+    public final TreasuryInput asTreasury() {
+        long ret = do_asTreasury(mNativeObj);
+        TreasuryInput convRet = new TreasuryInput(InternalPointerMarker.RAW_PTR, ret);
+
+        return convRet;
+    }
+    private static native long do_asTreasury(long self);
 
     public synchronized void delete() {
         if (mNativeObj != 0) {

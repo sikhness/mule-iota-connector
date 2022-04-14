@@ -18,18 +18,13 @@ public final class Essence {
     }
     private static native String do_to_string(long self);
 
-    public final java.util.Optional<RegularEssence> getAsRegular() {
-        long ret = do_getAsRegular(mNativeObj);
-        java.util.Optional<RegularEssence> convRet;
-        if (ret != 0) {
-            convRet = java.util.Optional.of(new RegularEssence(InternalPointerMarker.RAW_PTR, ret));
-        } else {
-            convRet = java.util.Optional.empty();
-        }
+    public final RegularEssence asRegular() {
+        long ret = do_asRegular(mNativeObj);
+        RegularEssence convRet = new RegularEssence(InternalPointerMarker.RAW_PTR, ret);
 
         return convRet;
     }
-    private static native long do_getAsRegular(long self);
+    private static native long do_asRegular(long self);
 
     public synchronized void delete() {
         if (mNativeObj != 0) {

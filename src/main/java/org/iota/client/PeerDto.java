@@ -5,23 +5,41 @@ package org.iota.client;
  * Describes a peer.
  */
 public final class PeerDto {
+    @Override
+    public String toString() {{
+        return this.to_string();
+    }}
+
 
     private PeerDto() {}
 
+    private final String to_string() {
+        String ret = do_to_string(mNativeObj);
+
+        return ret;
+    }
+    private static native String do_to_string(long self);
+    /**
+     * The id of the peer
+     */
     public final String id() {
         String ret = do_id(mNativeObj);
 
         return ret;
     }
     private static native String do_id(long self);
-
+    /**
+     * multi addresses
+     */
     public final java.lang.String [] multiAddresses() {
         java.lang.String [] ret = do_multiAddresses(mNativeObj);
 
         return ret;
     }
     private static native java.lang.String [] do_multiAddresses(long self);
-
+    /**
+     * The alias of the peer
+     */
     public final java.util.Optional<String> alias() {
         String ret = do_alias(mNativeObj);
         java.util.Optional<String> convRet = java.util.Optional.ofNullable(ret);
@@ -29,7 +47,9 @@ public final class PeerDto {
         return convRet;
     }
     private static native String do_alias(long self);
-
+    /**
+     * The type of peer
+     */
     public final Relation relation() {
         int ret = do_relation(mNativeObj);
         Relation convRet = Relation.fromInt(ret);
@@ -37,14 +57,18 @@ public final class PeerDto {
         return convRet;
     }
     private static native int do_relation(long self);
-
+    /**
+     * `true` if this peer is connected
+     */
     public final boolean connected() {
         boolean ret = do_connected(mNativeObj);
 
         return ret;
     }
     private static native boolean do_connected(long self);
-
+    /**
+     * The gossip information of this peer
+     */
     public final java.util.Optional<GossipDto> gossip() {
         long ret = do_gossip(mNativeObj);
         java.util.Optional<GossipDto> convRet;

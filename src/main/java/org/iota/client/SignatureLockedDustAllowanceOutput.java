@@ -22,6 +22,8 @@ public final class SignatureLockedDustAllowanceOutput {
     private static native String do_to_string(long self);
     /**
      * Creates a new `SignatureLockedDustAllowanceOutput`.
+     * @param address The address to set
+     * @param amount The amount to set
      */
     public static SignatureLockedDustAllowanceOutput from(Address address, long amount) {
         long a0 = address.mNativeObj;

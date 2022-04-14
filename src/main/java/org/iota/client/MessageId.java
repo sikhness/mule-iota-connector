@@ -3,6 +3,17 @@ package org.iota.client;
 
 
 public final class MessageId {
+    public boolean equals(Object obj) {
+        boolean equal = false;
+        if (obj instanceof MessageId)
+        equal = ((MessageId)obj).rustEq(this);
+        return equal;
+    }
+
+    public int hashCode() {
+        return (int)mNativeObj;
+    }
+
     @Override
     public String toString() {{
         return this.to_string();
@@ -21,6 +32,18 @@ public final class MessageId {
     }
     private static native String do_to_string(long self);
 
+    private final boolean rustEq(MessageId o) {
+        long a0 = o.mNativeObj;
+        boolean ret = do_rustEq(mNativeObj, a0);
+
+        JNIReachabilityFence.reachabilityFence1(o);
+
+        return ret;
+    }
+    private static native boolean do_rustEq(long self, long o);
+    /**
+     * Create a MessageId from string
+     */
     public static MessageId fromString(String str_rep) {
         long ret = do_fromString(str_rep);
         MessageId convRet = new MessageId(InternalPointerMarker.RAW_PTR, ret);

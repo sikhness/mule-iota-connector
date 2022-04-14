@@ -3,6 +3,17 @@ package org.iota.client;
 
 
 public final class Address {
+    public boolean equals(Object obj) {
+        boolean equal = false;
+        if (obj instanceof Address)
+        equal = ((Address)obj).rustEq(this);
+        return equal;
+    }
+
+    public int hashCode() {
+        return (int)mNativeObj;
+    }
+
     @Override
     public String toString() {{
         return this.to_string();
@@ -17,23 +28,33 @@ public final class Address {
         return ret;
     }
     private static native String do_to_string(long self);
+
+    private final boolean rustEq(Address o) {
+        long a0 = o.mNativeObj;
+        boolean ret = do_rustEq(mNativeObj, a0);
+
+        JNIReachabilityFence.reachabilityFence1(o);
+
+        return ret;
+    }
+    private static native boolean do_rustEq(long self, long o);
     /**
      * Tries to create an `Address` from a Bech32 encoded string.
      */
-    public static Address try_from_bech32(String addr) {
-        long ret = do_try_from_bech32(addr);
+    public static Address tryFromBech32(String addr) {
+        long ret = do_tryFromBech32(addr);
         Address convRet = new Address(InternalPointerMarker.RAW_PTR, ret);
 
         return convRet;
     }
-    private static native long do_try_from_bech32(String addr);
+    private static native long do_tryFromBech32(String addr);
 
-    public final String to_bech32(String hrp) {
-        String ret = do_to_bech32(mNativeObj, hrp);
+    public final String toBech32(String hrp) {
+        String ret = do_toBech32(mNativeObj, hrp);
 
         return ret;
     }
-    private static native String do_to_bech32(long self, String hrp);
+    private static native String do_toBech32(long self, String hrp);
 
     public final void verify(byte [] msg, SignatureUnlock signature) {
         long a1 = signature.mNativeObj;

@@ -17,33 +17,42 @@ public final class PublicKey {
         return ret;
     }
     private static native String do_to_string(long self);
-
-    public final boolean verify(Signature sig, byte [] msg) {
+    /**
+     * Verify the signature and bytes against this public key
+     * @param sig The signature to verify
+     * @param bytes The bytes to verify
+     */
+    public final boolean verify(Signature sig, byte [] bytes) {
         long a0 = sig.mNativeObj;
         sig.mNativeObj = 0;
 
-        boolean ret = do_verify(mNativeObj, a0, msg);
+        boolean ret = do_verify(mNativeObj, a0, bytes);
 
         JNIReachabilityFence.reachabilityFence1(sig);
 
         return ret;
     }
-    private static native boolean do_verify(long self, long sig, byte [] msg);
-
+    private static native boolean do_verify(long self, long sig, byte [] bytes);
+    /**
+     * Turns ths public key into bytes
+     */
     public final byte [] toBytes() {
         byte [] ret = do_toBytes(mNativeObj);
 
         return ret;
     }
     private static native byte [] do_toBytes(long self);
-
-    public static PublicKey tryFromBytes(byte [] bs) {
-        long ret = do_tryFromBytes(bs);
+    /**
+     * Attempt to create a public key from the provided bytes
+     * @param bytes The bytes to create the key from
+     */
+    public static PublicKey tryFromBytes(byte [] bytes) {
+        long ret = do_tryFromBytes(bytes);
         PublicKey convRet = new PublicKey(InternalPointerMarker.RAW_PTR, ret);
 
         return convRet;
     }
-    private static native long do_tryFromBytes(byte [] bs);
+    private static native long do_tryFromBytes(byte [] bytes);
 
     public synchronized void delete() {
         if (mNativeObj != 0) {

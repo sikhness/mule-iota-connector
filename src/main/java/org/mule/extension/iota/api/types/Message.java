@@ -37,13 +37,13 @@ public class Message {
 			// Fill in payload details based on the payloadType. Unsupported types in this
 			// connector will not get populated.
 			if (payloadType.equals("INDEXATION"))
-				indexationPayload = new IndexationPayload(message.payload().get().getAsIndexation().get());
+				indexationPayload = new IndexationPayload(message.payload().get().asIndexation());
 			else if (payloadType.equals("MILESTONE"))
-				milestonePayload = new MilestonePayload(message.payload().get().getAsMilestone().get());
+				milestonePayload = new MilestonePayload(message.payload().get().asMilestone());
 			else if (payloadType.equals("TRANSACTION"))
-				transactionPayload = new TransactionPayload(message.payload().get().getAsTransaction().get(),
+				transactionPayload = new TransactionPayload(message.payload().get().asTransaction(),
 						humanReadableAddressPrefix);
-			
+
 		}
 	}
 
@@ -123,22 +123,25 @@ public class Message {
 		private String index;
 		private String data;
 		private List<Output> outputs;
-		//TO DO: ADD INPUTS, currently a bug does not allow for proper retrieval of inputs
-		
+		private List<Input> inputs;
+
 		public TransactionPayload(org.iota.client.TransactionPayload transactionPayload,
 				String humanReadableAddressPrefix) {
 			// Check to see if IndexationPayload information is attached to the transaction
-			if (transactionPayload.essence().getAsRegular().get().payload().isPresent()) {
-				index = new String(transactionPayload.essence().getAsRegular().get().payload().get().getAsIndexation()
-						.get().index());
-				data = new String(transactionPayload.essence().getAsRegular().get().payload().get().getAsIndexation()
-						.get().data());
+			if (transactionPayload.essence().asRegular().payload().isPresent()) {
+				index = new String(transactionPayload.essence().asRegular().payload().get().asIndexation().index());
+				data = new String(transactionPayload.essence().asRegular().payload().get().asIndexation().data());
 			}
 
 			// Add outputs to the payload
 			outputs = new ArrayList<Output>();
-			for (org.iota.client.Output o : transactionPayload.essence().getAsRegular().get().outputs())
+			for (org.iota.client.Output o : transactionPayload.essence().asRegular().outputs())
 				outputs.add(new Output(o, humanReadableAddressPrefix));
+			
+			// Add inputs to the payload
+			inputs = new ArrayList<Input>();
+			for (org.iota.client.Input i : transactionPayload.essence().asRegular().inputs())
+				inputs.add(new Input(i, outputs));
 		}
 
 		public String getIndex() {
@@ -152,6 +155,10 @@ public class Message {
 		public List<Output> getOutputs() {
 			return outputs;
 		}
+		
+		public List<Input> getInputs() {
+			return inputs;
+		}
 
 		public class Output {
 			private String address;
@@ -162,11 +169,11 @@ public class Message {
 				type = output.kind().toString();
 				// Check to see if SIGNATURE_LOCKED_SINGLE or SIGNATURE_LOCKED_DUST_ALLOWANCE
 				if (type.equals("SIGNATURE_LOCKED_SINGLE")) {
-					address = output.asSignatureLockedSingleOutput().address().to_bech32(humanReadableAddressPrefix);
+					address = output.asSignatureLockedSingleOutput().address().toBech32(humanReadableAddressPrefix);
 					amount = output.asSignatureLockedSingleOutput().amount();
 				} else if (type.equals("SIGNATURE_LOCKED_DUST_ALLOWANCE")) {
 					address = output.asSignatureLockedDustAllowanceOutput().address()
-							.to_bech32(humanReadableAddressPrefix);
+							.toBech32(humanReadableAddressPrefix);
 					amount = output.asSignatureLockedDustAllowanceOutput().amount();
 				}
 			}
@@ -179,6 +186,28 @@ public class Message {
 				return amount;
 			}
 
+			public String getType() {
+				return type;
+			}
+		}
+		
+		public class Input {
+			private String address;
+			private String type;
+			
+			//Get Transaction Output Index and then search through all outputs in the message with the index to get input address
+			public Input(org.iota.client.Input input, List<Output> transactionOutputs) {
+				int transactionOutputIndex;
+				transactionOutputIndex = input.asUtxo().index();
+				
+				address = transactionOutputs.get(transactionOutputIndex).getAddress();
+				type = input.kind().toString();
+			}
+			
+			public String getAddress() {
+				return address;
+			}
+			
 			public String getType() {
 				return type;
 			}
