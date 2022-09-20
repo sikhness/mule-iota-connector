@@ -38,6 +38,13 @@ public class IOTAOperationsTestCase extends MuleArtifactFunctionalTestCase {
 				.getValue());
 		assertThat(payloadValue.getPrivateMnemonicSeed(), CoreMatchers.not(IsEmptyString.isEmptyOrNullString()));
 	}
+	
+	@Test
+	public void executeConvertMnemonicToHexSeedOperation() throws Exception {
+		String payloadValue = ((String) flowRunner("convertMnemonicToHexSeedFlow").run().getMessage().getPayload()
+				.getValue());
+		assertThat(payloadValue, is("3fc55baa7212eba1ea6e894b346e6cffef7fa395fc09910c6f87ce8b396f26627afd8b58e8c3aa24233ab87d7894e935f66317c2321dd8e0290b77fc19c05507"));
+	}
 
 	@Test
 	public void executeGenerateAddressOperation() throws Exception {

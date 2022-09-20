@@ -39,6 +39,11 @@ public final class MqttTopicManager {
     }
     private static native void do_unsubscribe(long self);
 
+    public final void subscribe(MqttListener cb) {
+        do_subscribe(mNativeObj, cb);
+    }
+    private static native void do_subscribe(long self, MqttListener cb);
+
     public synchronized void delete() {
         if (mNativeObj != 0) {
             do_delete(mNativeObj);

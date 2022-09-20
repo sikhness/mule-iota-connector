@@ -12,12 +12,15 @@ public final class IOTAConnection {
 	private final Protocol protocol;
 	private final String host;
 	private final Integer port;
+	private final boolean localProofOfWork;
 	private final Client iotaClient;
 
-	public IOTAConnection(Client iotaClient, Protocol protocol, String host, Integer port) {
+	public IOTAConnection(Client iotaClient, Protocol protocol, String host, Integer port, 
+			boolean localProofOfWork) {
 		this.protocol = protocol;
 		this.host = host;
 		this.port = port;
+		this.localProofOfWork = localProofOfWork;
 		this.iotaClient = iotaClient;
 	}
 
@@ -31,6 +34,10 @@ public final class IOTAConnection {
 
 	public Integer getPort() {
 		return port;
+	}
+	
+	public boolean getLocalProofOfWork() {
+		return localProofOfWork;
 	}
 
 	public Client getIotaClient() {

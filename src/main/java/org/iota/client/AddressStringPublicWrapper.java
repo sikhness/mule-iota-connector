@@ -39,7 +39,7 @@ public final class AddressStringPublicWrapper {
     }
     private static native boolean do_rustEq(long self, long o);
     /**
-     * If this is a publci address
+     * If this is a public address
      */
     public final boolean isPublic() {
         boolean ret = do_isPublic(mNativeObj);

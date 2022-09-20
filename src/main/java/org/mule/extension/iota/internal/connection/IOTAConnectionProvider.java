@@ -63,6 +63,11 @@ public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConn
 		@Example("14265")
 		@Expression(ExpressionSupport.SUPPORTED)
 		private Integer port;
+		
+		@Parameter
+		@DisplayName("Local proof of work")
+		@Optional(defaultValue = "True")
+		private boolean localProofOfWork;
 
 		public HttpConstants.Protocol getProtocol() {
 			return protocol;
@@ -74,6 +79,10 @@ public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConn
 
 		public Integer getPort() {
 			return port;
+		}
+		
+		public boolean getLocalProofOfWork() {
+			return localProofOfWork;
 		}
 	}
 
@@ -149,14 +158,14 @@ public class IOTAConnectionProvider implements CachedConnectionProvider<IOTAConn
 	private Client setupClient() throws ConnectionException, KeyManagementException, NoSuchAlgorithmException {
 		String url = (properties.protocol.toString() + "://" + properties.host + ":" + properties.port.toString())
 				.toLowerCase();
-		iotaClient = Client.Builder().withNode(url).finish();
+		iotaClient = Client.Builder().withNode(url).withLocalPow(properties.localProofOfWork).finish();
 
 		return iotaClient;
 	}
 
 	@Override
 	public IOTAConnection connect() throws ConnectionException {
-		return new IOTAConnection(iotaClient, properties.getProtocol(), properties.getHost(), properties.getPort());
+		return new IOTAConnection(iotaClient, properties.getProtocol(), properties.getHost(), properties.getPort(), properties.getLocalProofOfWork());
 	}
 
 	@Override

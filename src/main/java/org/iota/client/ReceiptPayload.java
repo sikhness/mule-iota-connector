@@ -33,6 +33,25 @@ public final class ReceiptPayload {
     }
     private static native String do_to_string(long self);
     /**
+     * Serializes the receipt payload into a json string
+     */
+    public final String serialize() {
+        String ret = do_serialize(mNativeObj);
+
+        return ret;
+    }
+    private static native String do_serialize(long self);
+    /**
+     * Turns a serialized receipt payload string back into its class
+     */
+    public static ReceiptPayload deserialize(String serialised_data) {
+        long ret = do_deserialize(serialised_data);
+        ReceiptPayload convRet = new ReceiptPayload(InternalPointerMarker.RAW_PTR, ret);
+
+        return convRet;
+    }
+    private static native long do_deserialize(String serialised_data);
+    /**
      * Returns the milestone index at which the funds of a `ReceiptPayload` were migrated at in the legacy network.
      */
     public final long migratedAt() {

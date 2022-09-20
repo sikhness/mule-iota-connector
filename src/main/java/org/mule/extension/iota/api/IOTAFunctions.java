@@ -159,4 +159,8 @@ public final class IOTAFunctions {
 
 		return IOTAFunctions.findMessage(iotaClient, message.id().toString());
 	}
+	
+	public static String mnemonicToHexSeed(Client iotaClient, String privateMnemonicSeed) {
+		return Client.mnemonicToHexSeed(privateMnemonicSeed);
+	}
 }

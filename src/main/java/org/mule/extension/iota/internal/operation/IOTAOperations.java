@@ -54,6 +54,14 @@ public class IOTAOperations {
 	public GenerateSeed generateSeed(@Config IOTAConfiguration configuration, @Connection IOTAConnection connection) {
 		return IOTAFunctions.generateSeed();
 	}
+	
+	@MediaType(value = ANY, strict = false)
+	@DisplayName("Convert private mnemonic to hex seed")
+	@Alias("mnemonic-to-hex-seed")
+	public String mnemonicToHexSeed(@Config IOTAConfiguration configuration, @Connection IOTAConnection connection,
+			String privateMnemonicSeed) {
+		return IOTAFunctions.mnemonicToHexSeed(connection.getIotaClient(), privateMnemonicSeed);
+	}
 
 	@MediaType(value = ANY, strict = false)
 	@DisplayName("Generate address")

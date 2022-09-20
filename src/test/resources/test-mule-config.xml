@@ -16,6 +16,10 @@
 	<flow name="generateSeedFlow">
 		<iota:generate-seed config-ref="config" />
 	</flow>
+	
+	<flow name="convertMnemonicToHexSeedFlow">
+		<iota:mnemonic-to-hex-seed config-ref="config" privateMnemonicSeed="accident woman siege test boat rocket replace into win save buffalo boy ripple define solar hawk denial fiction three grunt what original pill illness" />
+	</flow>
 
 	<flow name="generateAddressFlow">
 		<iota:generate-address config-ref="config">
